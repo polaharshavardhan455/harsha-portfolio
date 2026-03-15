@@ -1,62 +1,56 @@
-<!-- ======================================== -->
-<!-- 1. Document Declaration -->
-<!-- ======================================== -->
 <!DOCTYPE html>
-
-<!-- ======================================== -->
-<!-- 2. HTML Tag -->
-<!-- ======================================== -->
 <html lang="en">
 
-<!-- ======================================== -->
-<!-- 3. Head Section -->
-<!-- ======================================== -->
+<!-- ============================================================
+     HEAD — meta info, fonts, stylesheet link
+     Nothing visible here — just setup for the browser
+     ============================================================ -->
 <head>
 
-    <!-- ======================================== -->
-    <!-- Meta Tags -->
-    <!-- ======================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- ======================================== -->
-    <!-- Title -->
-    <!-- ======================================== -->
     <title>Pola Harsha</title>
 
-    <!-- ======================================== -->
-    <!-- CSS Links -->
-    <!-- ======================================== -->
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+    <!-- Favicon (browser tab icon) -->
+    <link rel="icon"             href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon"             href="assets/favicon.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="assets/favicon.png" sizes="180x180">
 
+    <!-- Google Fonts — Inter for body text, Major Mono for headings -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
+
+    <!-- Our main stylesheet -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- Google Analytics (tracks visits — can ignore for now) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8LNFC9VS6E"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag(){ dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-8LNFC9VS6E');
     </script>
 
 </head>
 
-<!-- ======================================== -->
-<!-- 4. Body Start -->
-<!-- ======================================== -->
+<!-- ============================================================
+     BODY — everything visible on the page starts here
+     ============================================================ -->
 <body>
 
-    <!-- ======================================== -->
-    <!-- 5. Intro Overlay -->
-    <!-- ======================================== -->
+    <!-- ============================================================
+         INTRO OVERLAY
+         Full-screen animation that plays once when you open the site
+         JS removes it after ~3 seconds
+         ============================================================ -->
     <div id="intro-overlay">
         <div id="intro-content">
+
+            <!-- Stars that burst outward during the animation -->
             <div id="intro-stars-burst"></div>
 
+            <!-- Name spelled out letter by letter -->
             <h1 id="intro-name">
                 <span class="intro-char">P</span>
                 <span class="intro-char">o</span>
@@ -71,64 +65,86 @@
                 <span class="intro-char">a</span>
             </h1>
 
-            <p id="intro-tagline">Cross-Domain Engineer .  AI X Hardware</p>
+            <p id="intro-tagline">Cross-Domain Engineer · AI × Hardware</p>
             <div id="intro-line"></div>
+
         </div>
     </div>
 
-    <!-- Cosmic Background -->
+
+    <!-- ============================================================
+         COSMIC BACKGROUND
+         Fixed behind everything — stars are injected here by JS
+         ============================================================ -->
     <div class="cosmic-bg">
         <div id="stars-far"></div>
         <div id="stars-mid"></div>
         <div id="stars-near"></div>
     </div>
 
-    <!-- ======================================== -->
-    <!-- 6. Navigation -->
-    <!-- ======================================== -->
+
+    <!-- ============================================================
+         NAVIGATION BAR
+         Fixed at top — stays visible while scrolling
+         ============================================================ -->
     <header class="header">
+
+        <!-- Scroll progress bar — fills left to right as you scroll -->
+        <div id="scroll-bar"></div>
+
         <div class="container nav-container">
 
+            <!-- Logo — clicking takes you back to top -->
             <a href="#" class="logo">Pola Harsha</a>
 
+            <!-- Hidden checkbox — controls mobile menu open/close (CSS trick) -->
             <input type="checkbox" id="nav-toggle" class="nav-toggle" />
 
+            <!-- Hamburger icon — only visible on mobile -->
             <label for="nav-toggle" class="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </label>
 
+            <!-- Navigation links -->
+            <!-- FIX 3: "Achievements" instead of "Credentials", "Beyond Tech" with space -->
             <nav class="nav-menu">
                 <ul>
                     <li><a href="#about">About</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#skills">Skills</a></li>
-                    <li><a href="#credentials">Credentials</a></li>
-                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#credentials">Achievements</a></li>
+                    <li><a href="#Education">Education</a></li>
                     <li><a href="#connect">Connect</a></li>
-                    <li><a href="#beyond">BeyondTech</a></li>
+                    <li><a href="#beyond">Beyond Tech</a></li>
                 </ul>
             </nav>
 
         </div>
     </header>
 
-    <!-- ======================================== -->
-    <!-- 7. Hero Section -->
-    <!-- ======================================== -->
+
+    <!-- ============================================================
+         MAIN CONTENT
+         All sections live inside <main>
+         ============================================================ -->
     <main>
 
+
+        <!-- ── HERO ─────────────────────────────────────────────── -->
         <section id="hero" class="hero-section">
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-text">
 
                         <p class="hero-greeting">Hello, I'm</p>
+
                         <h1 class="hero-name">
                             Pola<br>Harsha
                         </h1>
 
+                        <!-- Typewriter text — JS fills this in -->
                         <p class="tagline" id="typewriter-text"></p>
 
                         <a href="#about" class="cta-button">
@@ -140,118 +156,123 @@
             </div>
         </section>
 
-        <!-- ======================================== -->
-        <!-- 8. Main Content Wrapper -->
-        <!-- ======================================== -->
 
-        <!-- About -->
+        <!-- ── ABOUT ─────────────────────────────────────────────── -->
         <section id="about" class="section about-section">
             <div class="container">
                 <h2>About Me</h2>
 
                 <div class="about-card">
                     <p>
-                        I’m an Electronics and Communication Engineering student focused on AI systems, hardware integration, and intelligent automation.
-                        I enjoy building real-world systems that combine software intelligence with physical devices.
+                        I'm an Engineering student building foundations in Electronics, Computer Science, AI and Robotics.
+                        Beyond tech I enjoy solo travel, the gym, reading, and connecting with people from different fields.
                     </p>
                 </div>
             </div>
         </section>
 
-        <!-- Projects -->
+
+        <!-- ── PROJECTS ──────────────────────────────────────────── -->
         <section id="projects" class="section projects-section">
             <div class="container">
                 <h2>Projects</h2>
 
                 <div class="projects-grid">
+
+                    <!-- Project 1 -->
                     <div class="project-card">
                         <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop" alt="Personal Portfolio">
-
                         <h3>Personal Portfolio</h3>
-
-                        <p>
-                            A responsive single-page portfolio with smooth scrolling, cosmic starfield, and modern glassmorphism UI.
-                        </p>
-
-                        <a href="#" class="project-link">
-                            View Project →
-                        </a>
+                        <p>A responsive single-page portfolio with smooth scrolling, cosmic starfield, and amber glassmorphism UI.</p>
+                        <a href="#" class="project-link">View Project →</a>
                     </div>
+
+                    <!-- Project 2 -->
+                    <!-- FIX 4: Removed duplicate </a> tag -->
                     <div class="project-card">
-    <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=300&fit=crop" alt="ISS Live Tracker">
+                        <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=300&fit=crop" alt="ISS Live Tracker">
+                        <h3>ISS Live Tracker</h3>
+                        <p>Real-time International Space Station tracker showing live position, orbital path, and ground pass predictions using public NASA APIs.</p>
+                        <a href="https://github.com/polaharshavardhan455/iss_live" class="project-link" target="_blank">View Project →</a>
+                    </div>
 
-    <h3>ISS Live Tracker</h3>
+                    <!-- Project 3 — In Progress -->
+                    <div class="project-card in-progress">
+                        <div class="in-progress-badge">🚧 In Progress</div>
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=300&fit=crop" alt="Coming Soon">
+                        <h3>AI — Coming Soon</h3>
+                        <p>Something new is being built. Stay tuned — this project is currently under development.</p>
+                        <a href="#" class="project-link disabled" onclick="return false;">In Progress …</a>
+                    </div>
 
-    <p>
-        Real-time International Space Station tracker showing live position, orbital path, and ground pass predictions using public NASA APIs.
-    </p>
-
-<a href="https://github.com/polaharshavardhan455/iss_live" class="project-link" target="_blank">    View Project →
-</a>        
-    </a>
-</div>
-<div class="project-card in-progress">
-    <div class="in-progress-badge">🚧 In Progress</div>
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=300&fit=crop" alt="Coming Soon">
-    <h3>AI </h3>
-    <p>Something new is being built. Stay tuned — this project is currently under development.</p>
-    <a href="#" class="project-link disabled" onclick="return false;">In Progress …</a>
-</div>
                 </div>
             </div>
         </section>
 
-        <!-- Skills -->
+
+        <!-- ── SKILLS ────────────────────────────────────────────── -->
         <section id="skills" class="section skills-section">
             <div class="container">
                 <h2>Skills</h2>
 
+                <!-- Each skill-item has a data-skill attribute -->
+                <!-- JS reads that attribute to load the right info in the modal -->
                 <div class="skills-grid">
-    <div class="skill-item" data-skill="python">
-        <span class="skill-icon">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
-        </span>
-        <p>Python</p>
-    </div>
-    <div class="skill-item" data-skill="c">
-        <span class="skill-icon">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C">
-        </span>
-        <p>C Language</p>
-    </div>
-    <div class="skill-item" data-skill="embedded">
-        <span class="skill-icon">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Embedded">
-        </span>
-        <p>Embedded</p>
-    </div>
-    <div class="skill-item" data-skill="matlab">
-        <span class="skill-icon">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" alt="MATLAB">
-        </span>
-        <p>MATLAB</p>
-    </div>
-    <div class="skill-item" data-skill="htmlcss">
-        <span class="skill-icon">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML/CSS">
-        </span>
-        <p>HTML / CSS</p>
-    </div>
-    <div class="skill-item" data-skill="javascript">
-        <span class="skill-icon">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
-        </span>
-        <p>JavaScript</p>
-    </div>
-    <div class="skill-item" data-skill="genai">
-        <span class="skill-icon">🤖</span>
-        <p>Gen AI</p>
-    </div>
-</div>
+
+                    <div class="skill-item" data-skill="python">
+                        <span class="skill-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                        </span>
+                        <p>Python</p>
+                    </div>
+
+                    <div class="skill-item" data-skill="c">
+                        <span class="skill-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C">
+                        </span>
+                        <p>C Language</p>
+                    </div>
+
+                    <div class="skill-item" data-skill="embedded">
+                        <span class="skill-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Embedded">
+                        </span>
+                        <p>Embedded</p>
+                    </div>
+
+                    <div class="skill-item" data-skill="matlab">
+                        <span class="skill-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" alt="MATLAB">
+                        </span>
+                        <p>MATLAB</p>
+                    </div>
+
+                    <div class="skill-item" data-skill="htmlcss">
+                        <span class="skill-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML/CSS">
+                        </span>
+                        <p>HTML / CSS</p>
+                    </div>
+
+                    <div class="skill-item" data-skill="javascript">
+                        <span class="skill-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+                        </span>
+                        <p>JavaScript</p>
+                    </div>
+
+                    <div class="skill-item" data-skill="genai">
+                        <span class="skill-icon">🤖</span>
+                        <p>Gen AI</p>
+                    </div>
+
+                </div>
             </div>
         </section>
 
-        <!-- Skill Modal -->
+
+        <!-- ── SKILL MODAL ───────────────────────────────────────── -->
+        <!-- Hidden by default — JS shows it when you click a skill -->
         <div id="skillModal" class="skill-modal">
             <div class="skill-modal-content">
 
@@ -281,41 +302,147 @@
             </div>
         </div>
 
-        <!-- Credentials -->
-        <section id="credentials " class="section">
+
+        <!-- ── ACHIEVEMENTS & CERTS ──────────────────────────────── -->
+        <!-- FIX 3: id has no trailing space now -->
+        <section id="credentials" class="section">
             <div class="container">
-                <h2>Credentials and achievements </h2>
+                <h2>Achievements & Certs</h2>
 
-                <ul class="credentials-list">
-                    <li>Details to be added by before april 2024 </li>
-                </ul>
-            </div>
-        </section>
+                <div class="creds-grid">
 
-        <!-- education  -->
-        <section id="experience" class="section experience-section">
-            <div class="container">
-                <h2>Education</h2>
-
-                <div class="timeline">
-                    <div class="timeline-item">
-
-                        <div class="timeline-date">2023 – 2027</div>
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-    <h3>Bachelor's Degree</h3>
-    <p>Electronics and Communication Engineering</p>
-    <p style="color: var(--accent); font-size: 0.85rem; margin-top: 0.3rem;">Minor — Robotics & Industrial Automation</p>
-    <p style="color: var(--text-muted); font-size: 0.82rem; margin-top: 0.2rem;">JNTUACEP · 2023 – 2027</p>
-</div>
-
+                    <!-- Certificate card -->
+                    <div class="cred-card cred-cert">
+                        <div class="cred-top">
+                            <div class="cred-icon">🎓</div>
+                            <div class="cred-meta">
+                                <span class="cred-type">Certificate</span>
+                                <span class="cred-issuer">Coursera · Meta</span>
+                            </div>
+                        </div>
+                        <h3 class="cred-title">Python Programming</h3>
+                        <p class="cred-desc">Completed Meta's Python course covering core programming concepts, data structures, and practical scripting. Issued via Coursera.</p>
+                        <a href="https://coursera.org/share/a0c564366adb9bd2034ce00441eb87f0" target="_blank" class="cred-link">View Certificate →</a>
                     </div>
+
+                    <!-- L'Oreal Brandstorm -->
+                    <div class="cred-card cred-event">
+                        <div class="cred-top">
+                            <div class="cred-icon">🏆</div>
+                            <div class="cred-meta">
+                                <span class="cred-type">Competition</span>
+                                <span class="cred-issuer">L'Oréal · Brandstorm</span>
+                            </div>
+                        </div>
+                        <h3 class="cred-title">L'Oréal Brandstorm</h3>
+                        <p class="cred-desc">Participated in L'Oréal's global student innovation competition — developed a brand strategy pitch competing against teams nationwide.</p>
+                        <span class="cred-badge">Participant</span>
+                    </div>
+
+                    <!-- GUVI Ideathon -->
+                    <div class="cred-card cred-event">
+                        <div class="cred-top">
+                            <div class="cred-icon">💡</div>
+                            <div class="cred-meta">
+                                <span class="cred-type">Ideathon</span>
+                                <span class="cred-issuer">GUVI · AI Impact Summit</span>
+                            </div>
+                        </div>
+                        <h3 class="cred-title">AI Impact Summit Ideathon</h3>
+                        <p class="cred-desc">Presented an AI-driven idea at GUVI's AI Impact Summit Ideathon — focused on real-world problem solving using artificial intelligence.</p>
+                        <span class="cred-badge">Participant</span>
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- Connect -->
+
+        <!-- ── EDUCATION ─────────────────────────────────────────── -->
+        <section id="Education" class="section education-section">
+            <div class="container">
+                <h2>Education</h2>
+
+                <div class="road-journey">
+
+                    <!-- Stop 1: School -->
+                    <div class="road-stop">
+                        <div class="road-left">
+                            <div class="road-icon ri-done">🏫</div>
+                            <div class="road-pipe rp-done"></div>
+                        </div>
+                        <div class="road-content">
+                            <div class="road-title">School</div>
+                            <div class="road-sub">Until 2021</div>
+                            <div class="road-line">Where it all started. Maths, science, first time getting curious about how things actually work.</div>
+                            <div class="road-tags">
+                                <span class="rtag rtag-amber">Basics of everything</span>
+                                <span class="rtag rtag-amber">First time with computers</span>
+                                <span class="rtag rtag-dim">Sports & curiosity</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stop 2: Intermediate -->
+                    <div class="road-stop">
+                        <div class="road-left">
+                            <div class="road-icon ri-done">📐</div>
+                            <div class="road-pipe rp-done"></div>
+                        </div>
+                        <div class="road-content">
+                            <div class="road-title">Class 11 & 12 — MPC</div>
+                            <div class="road-sub">2021 – 2023</div>
+                            <div class="road-line">Physics and circuits clicked. This is where I decided engineering was the path.</div>
+                            <div class="road-tags">
+                                <span class="rtag rtag-amber">Maths got serious</span>
+                                <span class="rtag rtag-amber">Physics clicked</span>
+                                <span class="rtag rtag-orange">First interest in electronics</span>
+                                <span class="rtag rtag-dim">JEE prep grind</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stop 3: B.Tech — current -->
+                    <div class="road-stop">
+                        <div class="road-left">
+                            <div class="road-icon ri-now">⚡</div>
+                            <div class="road-pipe rp-dim"></div>
+                        </div>
+                        <div class="road-content">
+                            <div class="road-title">
+                                B.Tech ECE — JNTUACEP
+                                <span class="now-pill">Now</span>
+                            </div>
+                            <div class="road-sub">2023 – 2027 · Year 3 of 4</div>
+                            <div class="road-line">Building real things. Python, AI, Robotics, Embedded. Cross-domain thinking starts here. Still learning every day.</div>
+                            <div class="road-tags">
+                                <span class="rtag rtag-amber">Python & Embedded</span>
+                                <span class="rtag rtag-amber">AI / ML basics</span>
+                                <span class="rtag rtag-orange">Robotics Minor</span>
+                                <span class="rtag rtag-orange">Industrial Automation</span>
+                                <span class="rtag rtag-amber">Built real projects</span>
+                                <span class="rtag rtag-dim">Still exploring...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stop 4: Future -->
+                    <div class="road-stop">
+                        <div class="road-left">
+                            <div class="road-icon ri-future">🎓</div>
+                        </div>
+                        <div class="road-content">
+                            <div class="road-title" style="color: rgba(255,255,255,0.25);">Graduation</div>
+                            <div class="road-sub">2027 · What's next — TBD</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ── CONNECT ───────────────────────────────────────────── -->
         <section id="connect" class="section">
             <div class="container">
                 <h2>Let's Connect</h2>
@@ -344,6 +471,7 @@
                         GitHub
                     </a>
 
+                    <!-- UPDATE: Replace yourhandle with your real X username -->
                     <a href="https://twitter.com/yourhandle" target="_blank" class="connect-link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -355,46 +483,185 @@
             </div>
         </section>
 
-        <!-- BeyondTech -->
+
+        <!-- ── BEYOND TECH ───────────────────────────────────────── -->
+        <!-- FIX 5: Removed duplicate comment above this section -->
         <section id="beyond" class="section">
             <div class="container">
                 <h2>Beyond Tech</h2>
 
-                <div class="beyond-card">
-                    <p>
-                     travel blogs </p>
+                <!-- TRAVEL ROW -->
+                <div class="bt-row-label">
+                    <span class="bt-row-icon">✈️</span>
+                    <span>Solo & Group Travels</span>
+                    <span class="bt-row-count">6 trips</span>
                 </div>
+                <div class="bt-scroll-row" id="row-travel">
+
+                    <div class="bt-card bt-travel" data-id="t1">
+                        <div class="btc-num">01</div>
+                        <div class="btc-title">Pondicherry</div>
+                        <div class="btc-sub">First solo trip · Planned</div>
+                        <div class="btc-preview">Full plan, but real struggles showed up anyway. Where solo travel really started.</div>
+                        <div class="btc-more" id="more-t1">
+                            <p>Write your full story here on the weekend — what went wrong, what you learned, what made it worth it anyway.</p>
+                        </div>
+                        <button class="btc-btn" onclick="toggleMore('t1')">the story →</button>
+                    </div>
+
+                    <div class="bt-card bt-travel" data-id="t2">
+                        <div class="btc-num">02</div>
+                        <div class="btc-title">Mahakumbh Mela</div>
+                        <div class="btc-sub">No plan · No stay · Just the dip</div>
+                        <div class="btc-preview">No booking, no plan, no stay arranged. Went, took the dip, came back. That's it.</div>
+                        <div class="btc-more" id="more-t2">
+                            <p>Write the full story — how you even decided to go, what the crowd felt like, what the dip meant to you personally.</p>
+                        </div>
+                        <button class="btc-btn" onclick="toggleMore('t2')">the story →</button>
+                    </div>
+
+                    <div class="bt-card bt-travel bt-broken" data-id="t3">
+                        <div class="btc-num">03</div>
+                        <div class="btc-title">New Delhi</div>
+                        <div class="btc-sub">Broken trip · Returned early</div>
+                        <div class="btc-preview">Summer heat, something went sideways. Left before finishing. Still counts.</div>
+                        <div class="btc-more" id="more-t3">
+                            <p>Write what actually happened — broken trips are the most honest travel stories. What cut it short, and would you go back?</p>
+                        </div>
+                        <button class="btc-btn" onclick="toggleMore('t3')">the story →</button>
+                    </div>
+
+                    <div class="bt-card bt-travel" data-id="t4">
+                        <div class="btc-num">04</div>
+                        <div class="btc-title">Hampi</div>
+                        <div class="btc-sub">College friends · Planned by me</div>
+                        <div class="btc-preview">Organized the whole thing. Historical ruins, good company, one of the better ones.</div>
+                        <div class="btc-more" id="more-t4">
+                            <p>Write it — what it felt like to plan a group trip and actually pull it off, the best moment at the ruins, what surprised you about Hampi.</p>
+                        </div>
+                        <button class="btc-btn" onclick="toggleMore('t4')">the story →</button>
+                    </div>
+
+                    <div class="bt-card bt-travel" data-id="t5">
+                        <div class="btc-num">05</div>
+                        <div class="btc-title">Arunachalam</div>
+                        <div class="btc-sub">Solo · Fully unexpected</div>
+                        <div class="btc-preview">Bought a new shirt and just went. No research, no plan. One of the most real trips.</div>
+                        <div class="btc-more" id="more-t5">
+                            <p>Write this one fully — the impulse decision, what Arunachalam felt like, what you found there that you weren't looking for.</p>
+                        </div>
+                        <button class="btc-btn" onclick="toggleMore('t5')">the story →</button>
+                    </div>
+
+                    <div class="bt-card bt-travel" data-id="t6">
+                        <div class="btc-num">06</div>
+                        <div class="btc-title">New Delhi</div>
+                        <div class="btc-sub">AI Impact Summit · Purpose trip</div>
+                        <div class="btc-preview">Not just a trip. Upskill, new people, life lessons packed into a few days.</div>
+                        <div class="btc-more" id="more-t6">
+                            <p>Write what it meant — combining travel with a real purpose, who you met, what shifted in how you think about your path.</p>
+                        </div>
+                        <button class="btc-btn" onclick="toggleMore('t6')">the story →</button>
+                    </div>
+
+                    <div class="bt-card bt-travel bt-next">
+                        <div class="btc-num">→</div>
+                        <div class="btc-title">Next Trip</div>
+                        <div class="btc-sub">Planning · TBD</div>
+                        <div class="btc-preview">Somewhere new. No details yet. The list keeps growing.</div>
+                    </div>
+
+                </div>
+
+                <!-- GYM ROW — no expand buttons, just preview text -->
+                <div class="bt-row-label">
+                    <span class="bt-row-icon">💪</span>
+                    <span>Gym Journey</span>
+                    <span class="bt-row-count">1.5+ years</span>
+                </div>
+                <div class="bt-scroll-row" id="row-gym">
+
+                    <div class="bt-card bt-gym">
+                        <div class="btc-num">Phase 1</div>
+                        <div class="btc-title">The Reset</div>
+                        <div class="btc-sub">Overweight → Normal</div>
+                        <div class="btc-preview">Lost 15+ kgs. Not easy, not fast. Consistent. Changed how I saw discipline entirely.</div>
+                    </div>
+
+                    <div class="bt-card bt-gym">
+                        <div class="btc-num">Phase 2</div>
+                        <div class="btc-title">Body Recomp</div>
+                        <div class="btc-sub">Ongoing · Target 13% body fat</div>
+                        <div class="btc-preview">Phase 1 was weight. Phase 2 is composition. Harder, slower, more precise. Still going.</div>
+                    </div>
+
+                    <div class="bt-card bt-gym">
+                        <div class="btc-num">Always</div>
+                        <div class="btc-title">No End Date</div>
+                        <div class="btc-sub">It's just routine now</div>
+                        <div class="btc-preview">Not a goal with a finish line. Health and fitness is infrastructure — runs in the background of everything I do.</div>
+                    </div>
+
+                </div>
+
+                <!-- BOOKS ROW — no expand buttons, just preview text -->
+                <div class="bt-row-label">
+                    <span class="bt-row-icon">📚</span>
+                    <span>Books</span>
+                    <span class="bt-row-count">real picks only</span>
+                </div>
+                <div class="bt-scroll-row" id="row-books">
+
+                    <div class="bt-card bt-book">
+                        <div class="btc-num">✓ Done</div>
+                        <div class="btc-title">Atomic Habits</div>
+                        <div class="btc-sub">James Clear</div>
+                        <div class="btc-preview">Systems over goals. Reframes identity rather than outcomes — that idea changed how I approach learning, gym, everything.</div>
+                    </div>
+
+                    <div class="bt-card bt-book">
+                        <div class="btc-num">Reading</div>
+                        <div class="btc-title">Rich Dad Poor Dad</div>
+                        <div class="btc-sub">Robert Kiyosaki · Ongoing</div>
+                        <div class="btc-preview">Mid-read. Assets vs liabilities, money mindset — already shifting how I think about money and time.</div>
+                    </div>
+
+                    <div class="bt-card bt-book bt-next">
+                        <div class="btc-num">Next</div>
+                        <div class="btc-title">Add yours</div>
+                        <div class="btc-sub">What's on the list?</div>
+                        <div class="btc-preview">Keep this short. Only books that actually shifted something.</div>
+                    </div>
+
+                </div>
+
             </div>
         </section>
- 
-
-
-
-
 
 
     </main>
 
-    <!-- ======================================== -->
-    <!-- 9. Footer -->
-    <!-- ======================================== -->
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
     <footer>
         <div class="container">
             <p>&copy; 2026 Pola Harsha. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- ======================================== -->
-    <!-- 10. Script Section -->
-    <!-- ======================================== -->
+
+    <!-- ============================================================
+         SCRIPTS
+         Always placed at the bottom so HTML loads before JS runs
+         ============================================================ -->
     <script src="script.js"></script>
 
+    <!-- Back to top button — outside main, sits fixed bottom-right -->
     <button id="back-to-top" title="Back to top">
         <span>↑</span>
     </button>
 
-<!-- ======================================== -->
-<!-- 11. Body End -->
-<!-- ======================================== -->
 </body>
 </html>

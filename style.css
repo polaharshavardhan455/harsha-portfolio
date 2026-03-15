@@ -1,68 +1,166 @@
-/* ======================================== */
-/* RESET / GLOBAL STYLES */
-/* ======================================== */
+/* ============================================================
+   STYLE.CSS — Pola Harsha Portfolio
+   Organised top to bottom in the order things appear on the page
+   ============================================================
+
+
+   TABLE OF CONTENTS
+   -----------------
+   1.  Reset & Global
+   2.  CSS Variables (theme colours — change these to retheme everything)
+   3.  Cursor
+   4.  Scroll Progress Bar
+   5.  Cosmic Background & Stars
+   6.  Layout & Container
+   7.  Navigation
+   8.  Hero Section
+   9.  About Section
+   10. Projects Section
+   11. Skills Section
+   12. Skills Modal
+   13. Credentials Section
+   14. Education — Road Journey
+   15. Connect Section
+   16. Beyond Tech Section
+   17. Footer
+   18. Intro Overlay (opening animation)
+   19. Back To Top Button
+   20. Keyframe Animations
+   21. Media Queries (responsive / mobile)
+   ============================================================ */
+
+
+/* ============================================================
+   1. RESET & GLOBAL
+   Remove default browser spacing, set box model, smooth scroll
+   ============================================================ */
 
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* width includes padding — much easier to work with */
 }
 
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; /* clicking nav links scrolls smoothly instead of jumping */
 }
 
 body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     color: var(--text);
-    background: transparent;
+    background: transparent; /* cosmic-bg div provides the actual background */
     min-height: 100vh;
 }
 
 
-/* ======================================== */
-/* ROOT VARIABLES */
-/* ======================================== */
+/* ============================================================
+   2. CSS VARIABLES (THEME)
+   Change values here and the whole site updates automatically
+   --accent is the main amber gold colour used everywhere
+   ============================================================ */
 
 :root {
-    --text: #e2e8f0;
-    --text-muted: #94a3b8;
-    --accent: #60a5fa;
-    --accent-glow: rgba(96, 165, 250, 0.4);
-    --glass-bg: rgba(15, 23, 42, 0.65);
-    --glass-border: rgba(148, 163, 184, 0.15);
-    --glass-hover: rgba(96, 165, 250, 0.15);
+    --text:         #f5e6c8;                    /* main text — warm off-white */
+    --text-muted:   #a88a5a;                    /* secondary text — muted gold-brown */
+    --accent:       #fbbf24;                    /* amber gold — buttons, borders, highlights */
+    --accent-glow:  rgba(251, 191, 36, 0.4);    /* glow version of accent for shadows */
+    --glass-bg:     rgba(28, 16, 8, 0.65);      /* card backgrounds — semi-transparent dark */
+    --glass-border: rgba(251, 191, 36, 0.12);   /* card borders — faint amber */
+    --glass-hover:  rgba(251, 191, 36, 0.1);    /* card background when hovered */
 }
 
 
-/* ======================================== */
-/* BACKGROUND EFFECTS (COSMIC / STARS) */
-/* ======================================== */
+/* ============================================================
+   3. CURSOR
+   Custom golden arrow replaces the default browser cursor
+   The SVG is embedded directly as a data URL — no file needed
+   "2 2" = hotspot (the tip of the arrow)
+   "auto" = fallback if custom cursor fails to load
+   ============================================================ */
+
+* {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='22' viewBox='0 0 18 22'%3E%3Cpath d='M2 2 L2 18 L6 14 L9 20 L12 19 L9 13 L15 13 Z' fill='%23fbbf24' stroke='%230a0700' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E") 2 2, auto;
+}
+
+
+/* ============================================================
+   4. SCROLL PROGRESS BAR
+   Thin line at the very top of the page
+   JS sets its width as a percentage based on how far you've scrolled
+   ============================================================ */
+
+#scroll-bar {
+    position: fixed;    /* stays at top even when scrolling */
+    top: 0;
+    left: 0;
+    width: 0%;          /* starts empty — JS changes this */
+    height: 3px;
+    background: linear-gradient(90deg, #f97316, #fbbf24); /* orange → gold */
+    z-index: 9999;      /* sits above everything */
+    transition: width 0.1s ease;
+box-shadow: 0 0 6px rgba(251, 191, 36, 0.25);}
+
+
+/* ============================================================
+   5. COSMIC BACKGROUND & STARS
+   Fixed behind all content — moves with parallax on mouse move
+   Three layers (far/mid/near) move at different speeds for depth
+   ============================================================ */
 
 .cosmic-bg {
     position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(-45deg, #0f172a, #0b1120, #111827, #0a0f1c);
+    inset: 0;           /* shorthand for top/right/bottom/left: 0 */
+    z-index: -1;        /* behind everything */
+    background: linear-gradient(-45deg, #0d0804, #080502, #100c04, #060400);
     background-size: 400% 400%;
-    animation: gradientMove 18s ease infinite;
+    animation: gradientMove 18s ease infinite; /* slowly shifts the gradient */
 }
 
+/* Star containers — JS fills these with dot divs */
 #stars-far,
 #stars-mid,
 #stars-near {
     position: absolute;
-    inset: -10%;
+    inset: -10%;        /* slightly oversized so parallax doesn't show edges */
     width: 120%;
     height: 120%;
+    pointer-events: none; /* clicks pass through */
+}
+
+/* Individual star dots — created by generateStars() in JS */
+.star {
+    position: absolute;
+    border-radius: 50%;
+}
+
+/* Ember particles — created by generateEmbers() in JS */
+.ember {
+    position: absolute;
+    border-radius: 50%;
     pointer-events: none;
+    animation: emberFloat var(--dur) ease-in infinite;
+animation-delay: var(--delay);
+opacity: 0;
+}
+
+/* Shooting stars — created by addShootingStar() in JS */
+.shooting-star {
+    position: absolute;
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(251,191,36,0.8), transparent);
+    animation: shoot var(--shoot-dur) linear var(--shoot-delay) forwards;
+    transform: rotate(-35deg);
+    opacity: 0;
 }
 
 
-/* ======================================== */
-/* LAYOUT / CONTAINER */
-/* ======================================== */
+/* ============================================================
+   6. LAYOUT & CONTAINER
+   .container keeps content centred with a max width
+   .section applies consistent padding to every section
+   ============================================================ */
 
 .container {
     max-width: 1200px;
@@ -75,6 +173,7 @@ body {
     border-top: 1px solid var(--glass-border);
 }
 
+/* Section headings — the amber underline is added via ::after */
 h2 {
     font-size: 2.2rem;
     margin-bottom: 3rem;
@@ -95,26 +194,29 @@ h2::after {
 }
 
 
-/* ======================================== */
-/* NAVIGATION */
-/* ======================================== */
+/* ============================================================
+   7. NAVIGATION
+   Fixed at top — .scrolled class is added by JS on scroll
+   Mobile hamburger menu uses a pure CSS checkbox toggle trick
+   ============================================================ */
 
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(6, 13, 26, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(28, 12, 4, 0.85);
+    backdrop-filter: blur(16px);          /* frosted glass effect */
+    -webkit-backdrop-filter: blur(16px);  /* Safari support */
     border-bottom: 1px solid var(--glass-border);
     z-index: 1000;
     transition: background 0.4s ease, backdrop-filter 0.4s ease;
 }
 
+/* Slightly more transparent when you've scrolled down */
 .header.scrolled {
-    background: rgba(5, 5, 20, 0.7);
-    border-bottom: 1px solid rgba(147, 197, 253, 0.1);
+    background: rgba(20, 10, 2, 0.7);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.1);
 }
 
 .nav-container {
@@ -126,22 +228,22 @@ h2::after {
     align-items: center;
 }
 
+/* Logo — gradient text using background-clip trick */
 .logo {
     font-family: 'Major Mono Display', monospace;
     font-size: 1.5rem;
     font-weight: 400;
     letter-spacing: 1px;
     text-decoration: none;
-    transition: color 0.3s, text-shadow 0.3s;
-    background: linear-gradient(135deg, #ffffff, #93c5fd);
+    background: linear-gradient(135deg, #ffffff, #fbbf24);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    transition: opacity 0.3s;
 }
 
 .logo:hover {
-    color: var(--accent);
-    text-shadow: 0 0 20px var(--accent-glow);
+    opacity: 0.8;
 }
 
 .nav-menu ul {
@@ -160,6 +262,7 @@ h2::after {
     position: relative;
 }
 
+/* Animated underline that grows on hover */
 .nav-menu a::after {
     content: '';
     position: absolute;
@@ -171,18 +274,22 @@ h2::after {
     transition: width 0.3s;
 }
 
-.nav-menu a:hover {
+.nav-menu a:hover,
+.nav-menu a.active {
     color: var(--accent);
 }
 
-.nav-menu a:hover::after {
+.nav-menu a:hover::after,
+.nav-menu a.active::after {
     width: 100%;
 }
 
+/* Hide the real checkbox input */
 .nav-toggle {
     display: none;
 }
 
+/* Hamburger — hidden on desktop, shown on mobile */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -197,17 +304,20 @@ h2::after {
     border-radius: 2px;
     transition: all 0.4s;
 }
+
+/* Mobile nav styles */
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
     }
 
+    /* Menu slides down from off-screen */
     .nav-menu {
         position: absolute;
         top: 100%;
         left: 0;
         width: 100%;
-        background: rgba(6, 13, 26, 0.98);
+        background: rgba(20, 10, 2, 0.98);
         backdrop-filter: blur(16px);
         transform: translateY(-110%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -222,27 +332,28 @@ h2::after {
         text-align: center;
     }
 
+    /* When checkbox is checked, slide menu into view */
     #nav-toggle:checked ~ .nav-menu {
         transform: translateY(0);
     }
 
+    /* Animate hamburger into X when open */
     #nav-toggle:checked + .hamburger span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
-
     #nav-toggle:checked + .hamburger span:nth-child(2) {
         opacity: 0;
     }
-
     #nav-toggle:checked + .hamburger span:nth-child(3) {
         transform: rotate(-45deg) translate(5px, -5px);
     }
 }
 
 
-/* ======================================== */
-/* HERO SECTION */
-/* ======================================== */
+/* ============================================================
+   8. HERO SECTION
+   The first thing people see — big name, typewriter, CTA button
+   ============================================================ */
 
 .hero-section {
     padding: 140px 0 80px;
@@ -260,7 +371,7 @@ h2::after {
 
 .hero-text {
     flex: 1;
-    animation: fade-up 0.8s ease both;
+    animation: fadeUp 0.8s ease both;
 }
 
 h1 {
@@ -274,40 +385,70 @@ h1 {
 
 .hero-greeting {
     font-size: 1.1rem;
-    color: #93c5fd;
+    color: var(--accent);
     letter-spacing: 0.3em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
     opacity: 0.8;
 }
 
+/* Gradient text — white → amber → orange */
 .hero-name {
     font-family: 'Major Mono Display', monospace;
-    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-size: clamp(2.8rem, 7vw, 5rem); /* clamp: min, preferred, max */
     line-height: 1;
     font-weight: 700;
-    background: linear-gradient(135deg, #ffffff 0%, #93c5fd 50%, #c4b5fd 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #fbbf24 50%, #f97316 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1.2rem;
+    position: relative; /* needed for ::before pseudo-element */
 }
 
+/* Soft ambient glow behind the name */
+.hero-name::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140%;
+    height: 200%;
+    background: radial-gradient(ellipse, rgba(251,191,36,0.12) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Decorative line beneath the name */
 .hero-name::after {
     content: '';
     display: block;
     width: 80px;
     height: 2px;
     margin: 1.5rem auto 0;
-    background: linear-gradient(90deg, transparent, #93c5fd, transparent);
+    background: linear-gradient(90deg, transparent, #fbbf24, transparent);
     opacity: 0.6;
 }
 
+/* Typewriter area — JS writes into the span inside this */
 .tagline {
     font-size: 1.05rem;
     margin-bottom: 2rem;
     color: var(--text-muted);
     letter-spacing: 0.05em;
+}
+
+/* The blinking cursor at end of typewriter text */
+.typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--accent);
+    margin-left: 3px;
+    vertical-align: middle;
+    animation: blink 0.7s step-end infinite;
 }
 
 .cta-button {
@@ -320,29 +461,20 @@ h1 {
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s;
-    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
 }
 
 .cta-button:hover {
-    background: #93c5fd;
-    box-shadow: 0 0 35px rgba(96, 165, 250, 0.55);
+    background: #fde68a;
+    box-shadow: 0 0 35px rgba(251, 191, 36, 0.55);
     transform: translateY(-2px);
 }
 
-.typewriter-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1.1em;
-    background: #93c5fd;
-    margin-left: 3px;
-    vertical-align: middle;
-    animation: blink 0.7s step-end infinite;
-}
 
-
-/* ======================================== */
-/* ABOUT SECTION */
-/* ======================================== */
+/* ============================================================
+   9. ABOUT SECTION
+   Single glassmorphism card with a hover lift effect
+   ============================================================ */
 
 .about-card {
     max-width: 760px;
@@ -360,14 +492,16 @@ h1 {
 
 .about-card:hover {
     background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.3);
+    border-color: rgba(251, 191, 36, 0.3);
     transform: translateY(-4px);
 }
 
 
-/* ======================================== */
-/* PROJECTS SECTION */
-/* ======================================== */
+/* ============================================================
+   10. PROJECTS SECTION
+   CSS grid auto-fits cards — grows from 1 to 3 columns
+   Cards have a 3D tilt effect applied by JS on mousemove
+   ============================================================ */
 
 .projects-grid {
     display: grid;
@@ -381,14 +515,14 @@ h1 {
     border-radius: 14px;
     overflow: hidden;
     transition: all 0.35s;
+    transform-style: preserve-3d; /* enables 3D tilt from JS */
 }
 
 .project-card:hover {
-    transform: translateY(-8px) scale(1.02);
     background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.4);
+    border-color: rgba(251, 191, 36, 0.4);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
-                0 0 40px rgba(96, 165, 250, 0.2);
+                0 0 40px rgba(251, 191, 36, 0.2);
 }
 
 .project-card img {
@@ -396,79 +530,85 @@ h1 {
     height: 180px;
     object-fit: cover;
     display: block;
-    filter: brightness(0.75);
-    transition: filter 0.35s;
+    transition: transform 0.4s ease;
+    filter: brightness(0.75) saturate(0.8);
 }
 
 .project-card:hover img {
-    filter: brightness(1);
+    transform: scale(1.04);
+    filter: brightness(0.85) saturate(1);
 }
 
 .project-card h3 {
-    padding: 1.2rem 1.5rem 0.4rem;
-    font-size: 1.15rem;
+    padding: 1.2rem 1.4rem 0.4rem;
+    font-size: 1.05rem;
     color: #fff;
 }
 
 .project-card p {
-    padding: 0 1.5rem 1rem;
+    padding: 0 1.4rem 1rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
-    font-size: 0.95rem;
+    line-height: 1.65;
 }
 
 .project-link {
     display: inline-block;
-    margin: 0 1.5rem 1.5rem;
+    margin: 0 1.4rem 1.4rem;
+    font-size: 0.85rem;
     color: var(--accent);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.9rem;
+    transition: color 0.2s;
 }
 
 .project-link:hover {
-    color: #93c5fd;
+    color: #fff;
 }
 
-/* PROJECTS upcoming bar */
-
-
-
-.in-progress-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(253, 230, 138, 0.15);
-    border: 1px solid #fde68a;
-    color: #fde68a;
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border-radius: 20px;
-}
-
+/* In-progress card — slightly dimmed with a badge */
 .project-card.in-progress {
     position: relative;
     opacity: 0.75;
 }
 
-.project-link.disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+.in-progress-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 20px;
+    color: var(--accent);
+    z-index: 1;
 }
-/* ======================================== */
-/* SKILLS SECTION */
-/* ======================================== */
+
+.project-link.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   11. SKILLS SECTION
+   Grid of skill icons — clicking opens the modal
+   ============================================================ */
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .skill-item {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    padding: 1.5rem 1rem;
+    padding: 1.4rem 1rem;
     text-align: center;
     transition: all 0.3s;
     cursor: pointer;
@@ -476,291 +616,367 @@ h1 {
 
 .skill-item:hover {
     background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.5);
-    transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(96, 165, 250, 0.2);
+    border-color: rgba(251, 191, 36, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3),
+                0 0 15px rgba(251,191,36,0.1);
 }
 
 .skill-icon {
-    font-size: 2.2rem;
     display: block;
-    margin-bottom: 0.7rem;
-    transition: transform 0.3s;
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 0.6rem;
+    font-size: 2rem;
+    line-height: 44px;
+    text-align: center;
 }
+
 .skill-icon img {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
-    transition: transform 0.3s;
-}
-
-.skill-item:hover .skill-icon img {
-    transform: scale(1.2) rotate(5deg);
-}
-
-.skill-item:hover .skill-icon {
-    transform: scale(1.2) rotate(5deg);
 }
 
 .skill-item p {
-    font-size: 0.88rem;
-    color: var(--text);
-    margin: 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
 
-/* ======================================== */
-/* SKILL MODAL */
-/* ======================================== */
+/* ============================================================
+   12. SKILLS MODAL
+   Hidden popup — JS shows/hides it when you click a skill
+   backdrop is the dark overlay behind the modal box
+   ============================================================ */
 
 .skill-modal {
-    display: none;
+    display: none;               /* hidden by default */
     position: fixed;
-    z-index: 2000;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(2, 5, 9, 0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
 }
 
 .skill-modal-content {
-    position: relative;
-    background: var(--glass-bg);
-    border: 2px solid var(--glass-border);
-    margin: 10% auto;
-    padding: 2.5rem;
+    background: #1a0d04;
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 420px;
     width: 90%;
-    max-width: 500px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
-                0 0 40px rgba(96, 165, 250, 0.2);
+    position: relative;
+    margin: auto;
+    margin-top: 15vh;
 }
 
 .skill-modal-close {
     position: absolute;
-    right: 1.5rem;
-    top: 1.5rem;
+    top: 1rem;
+    right: 1.2rem;
+    font-size: 1.5rem;
     color: var(--text-muted);
-    font-size: 2rem;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: color 0.2s;
+    line-height: 1;
 }
 
 .skill-modal-close:hover {
     color: var(--accent);
-    transform: rotate(90deg);
 }
 
 .skill-modal-content h3 {
-    margin-bottom: 2rem;
-    color: var(--accent);
-    font-size: 1.8rem;
-    text-align: center;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 1.2rem;
 }
 
 .skill-details {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.9rem;
 }
 
 .skill-detail-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.3rem;
 }
 
 .detail-label {
-    color: var(--text);
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-.skill-detail-item span:last-child,
-.skill-detail-item a {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    padding-left: 0.5rem;
-}
-
-.skill-detail-item a {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--accent);
-    text-decoration: none;
+    font-weight: 600;
 }
 
-.skill-detail-item a:hover {
-    color: #93c5fd;
-    text-decoration: underline;
-}
-
+/* Skill level progress bar */
 .skill-level-bar {
-    width: 100%;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
     overflow: hidden;
+    margin-top: 0.3rem;
 }
 
 .skill-level-fill {
     height: 100%;
+    background: linear-gradient(90deg, #f97316, #fbbf24);
+    border-radius: 6px;
     width: 0%;
-    background: linear-gradient(90deg, var(--accent), #93c5fd);
-    border-radius: 10px;
-    box-shadow: 0 0 15px var(--accent-glow);
-    transition: width 0.6s ease;
+    transition: width 0.8s ease; /* JS sets this to the actual % */
+    box-shadow: 0 0 8px rgba(251,191,36,0.4);
 }
 
-/* ======================================== */
-/* CREDENTIALS SECTION */
-/* ======================================== */
+#modalLearnedFrom {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
 
-.credentials-list {
-    max-width: 700px;
+#modalCertLink {
+    font-size: 0.85rem;
+    color: var(--accent);
+    word-break: break-all;
+}
+
+
+/* ============================================================
+   13. CREDENTIALS SECTION
+   Three cards in a responsive grid
+   Left coloured border indicates certificate vs event
+   ============================================================ */
+
+.creds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem;
+    max-width: 1000px;
     margin: 0 auto;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
 }
 
-.credentials-list li {
+.cred-card {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    border-radius: 10px;
-    padding: 1rem 1.5rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    border-radius: 16px;
+    padding: 1.6rem;
     transition: all 0.3s;
-}
-
-.credentials-list li:hover {
-    background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.3);
-    transform: translateX(8px);
-}
-
-.credentials-list li::before {
-    content: '◆';
-    color: var(--accent);
-    font-size: 0.5rem;
-    flex-shrink: 0;
-}
-
-
-/* ======================================== */
-/* EXPERIENCE SECTION (TIMELINE) */
-/* ======================================== */
-
-.timeline {
     position: relative;
-    max-width: 860px;
-    margin: 0 auto;
+    overflow: hidden;
 }
 
-.timeline::before {
+/* Coloured left border strip using ::before pseudo-element */
+.cred-card::before {
     content: '';
     position: absolute;
     top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
-    transform: translateX(-50%);
-    opacity: 0.3;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 16px 0 0 16px;
 }
 
-.timeline-item {
-    display: flex;
-    margin-bottom: 3rem;
-    position: relative;
-}
+.cred-cert::before  { background: linear-gradient(to bottom, #fbbf24, #f97316); }
+.cred-event::before { background: linear-gradient(to bottom, #f97316, rgba(251,191,36,0.4)); }
 
-.timeline-dot {
-    position: absolute;
-    left: 50%;
-    top: 1.4rem;
-    transform: translateX(-50%);
-    width: 10px;
-    height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--accent-glow);
-}
-
-.timeline-date {
-    flex: 1;
-    text-align: right;
-    padding-right: 2.5rem;
-    font-weight: 600;
-    font-size: 0.88rem;
-    color: var(--accent);
-    letter-spacing: 0.5px;
-    padding-top: 1.3rem;
-}
-
-.timeline-content {
-    flex: 1;
-    padding: 1.3rem 1.5rem;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    transition: all 0.3s;
-}
-
-.timeline-content:hover {
+.cred-card:hover {
+    transform: translateY(-5px);
     background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.35);
-    box-shadow: 0 0 30px rgba(96, 165, 250, 0.15);
-    transform: translateY(-4px);
+    border-color: rgba(251, 191, 36, 0.3);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
 }
 
-.timeline-content h3 {
-    margin-bottom: 0.4rem;
+.cred-top {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.cred-icon { font-size: 1.6rem; line-height: 1; }
+
+.cred-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cred-type {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.cred-issuer { font-size: 0.78rem; color: var(--text-muted); }
+
+.cred-title {
+    font-size: 1rem;
+    font-weight: 600;
     color: #fff;
-    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
 }
 
-.timeline-content p {
+.cred-desc {
+    font-size: 0.83rem;
     color: var(--text-muted);
-    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
 }
 
-/* ======================================== */
-/* EXPERIENCE SECTION — RESPONSIVE */
-/* ======================================== */
+.cred-link {
+    display: inline-block;
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(251,191,36,0.3);
+    padding-bottom: 1px;
+    transition: all 0.2s;
+}
+
+.cred-link:hover {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
+.cred-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(251,191,36,0.1);
+    color: rgba(251,191,36,0.67);
+    border: 1px solid rgba(251,191,36,0.25);
+    font-weight: 500;
+}
+
+
+/* ============================================================
+   14. EDUCATION — ROAD JOURNEY
+   Vertical timeline with icon nodes, pipes, and content
+   ============================================================ */
+
+.road-journey {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+/* Each stop = icon + vertical pipe + content side by side */
+.road-stop {
+    display: flex;
+    gap: 18px;
+    align-items: stretch;
+}
+
+.road-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* The circular icon node */
+.road-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.ri-done   { background: rgba(251,191,36,0.12); border: 1.5px solid rgba(251,191,36,0.4); }
+.ri-now    { background: rgba(251,191,36,0.2); border: 2px solid #fbbf24; box-shadow: 0 0 16px rgba(251,191,36,0.3); }
+.ri-future { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); }
+
+/* Vertical line connecting nodes */
+.road-pipe {
+    width: 1.5px;
+    flex: 1;
+    min-height: 16px;
+    margin: 4px 0;
+}
+
+.rp-done { background: rgba(251,191,36,0.25); }
+.rp-dim  { background: rgba(255,255,255,0.07); }
+
+.road-content {
+    padding-bottom: 2.2rem;
+    padding-top: 6px;
+    flex: 1;
+}
+
+.road-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.road-sub {
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.road-line {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 0.7rem;
+    font-style: italic;
+}
+
+.road-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Tag pills */
+.rtag {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.rtag-amber  { background: rgba(251,191,36,0.1); color: rgba(251,191,36,0.8); border: 1px solid rgba(251,191,36,0.25); }
+.rtag-orange { background: rgba(249,115,22,0.1); color: rgba(249,115,22,0.8); border: 1px solid rgba(249,115,22,0.2); }
+.rtag-dim    { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.08); }
+
+/* "Now" badge inline with the title */
+.now-pill {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(251,191,36,0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 20px;
+    font-weight: 500;
+}
 
 @media (max-width: 768px) {
-    .timeline::before {
-        left: 18px;
-    }
-
-    .timeline-dot {
-        left: 18px;
-    }
-
-    .timeline-item {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .timeline-date {
-        text-align: left;
-        padding: 0 0 0.5rem 45px;
-    }
-
-    .timeline-content {
-        padding: 1.2rem;
-    }
+    .road-icon { width: 34px; height: 34px; font-size: 14px; }
+    .road-title { font-size: 0.92rem; }
 }
 
 
-/* ======================================== */
-/* CONNECT SECTION */
-/* ======================================== */
+/* ============================================================
+   15. CONNECT SECTION
+   Row of social link buttons
+   ============================================================ */
 
 .connect-links {
     display: flex;
@@ -787,11 +1003,10 @@ h1 {
 
 .connect-link:hover {
     background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.5);
+    border-color: rgba(251, 191, 36, 0.5);
     color: var(--accent);
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(96, 165, 250, 0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
 .connect-link svg {
@@ -803,38 +1018,142 @@ h1 {
 
 .connect-link:hover svg {
     transform: scale(1.1);
-    filter: drop-shadow(0 0 8px var(--accent));
+}
+
+@media (max-width: 480px) {
+    .connect-link { padding: 0.75rem 1.1rem; font-size: 0.85rem; }
 }
 
 
-/* ======================================== */
-/* BEYOND TECH SECTION */
-/* ======================================== */
+/* ============================================================
+   16. BEYOND TECH — HORIZONTAL SCROLL ROWS
+   Three independent scroll rows: Travel, Gym, Books
+   Each card is 220px wide and snaps on scroll
+   ============================================================ */
 
-.beyond-card {
-    max-width: 700px;
-    margin: 0 auto;
+/* Row heading with emoji + title + count badge */
+.bt-row-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 2.5rem 0 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.bt-row-label:first-of-type { margin-top: 0; }
+.bt-row-icon { font-size: 1.1rem; }
+
+.bt-row-count {
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: rgba(251,191,36,0.1);
+    color: rgba(251,191,36,0.6);
+    border: 1px solid rgba(251,191,36,0.2);
+    font-weight: 500;
+    margin-left: auto;
+}
+
+/* The scrollable container */
+.bt-scroll-row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;     /* cards snap into position */
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+.bt-scroll-row::-webkit-scrollbar       { height: 3px; }
+.bt-scroll-row::-webkit-scrollbar-thumb { background: rgba(251,191,36,0.25); border-radius: 3px; }
+
+/* Individual card */
+.bt-card {
+    min-width: 220px;
+    max-width: 220px;
     background: var(--glass-bg);
+    border-radius: 14px;
+    padding: 1.2rem;
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 2rem 2.5rem;
-    text-align: center;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    transition: border-color 0.3s, background 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+/* Coloured top border by category */
+.bt-travel { border-top: 2px solid rgba(251,191,36,0.4); }
+.bt-gym    { border-top: 2px solid rgba(249,115,22,0.4); }
+.bt-book   { border-top: 2px solid rgba(139,92,246,0.4); }
+
+/* Hover — border and background shift to match category */
+.bt-travel:hover { border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.06); }
+.bt-gym:hover    { border-color: rgba(249,115,22,0.5);  background: rgba(249,115,22,0.06); }
+.bt-book:hover   { border-color: rgba(139,92,246,0.5);  background: rgba(139,92,246,0.06); }
+
+/* Special states */
+.bt-broken { opacity: 0.75; }
+.bt-next   { opacity: 0.45; border-style: dashed; }
+
+/* Card content */
+.btc-num {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.1rem;
+}
+
+.bt-travel .btc-num { color: rgba(251,191,36,0.47); }
+.bt-gym    .btc-num { color: rgba(249,115,22,0.47); }
+.bt-book   .btc-num { color: rgba(167,139,250,0.47); }
+
+.btc-title   { font-size: 1rem; font-weight: 600; color: #fff; }
+.btc-sub     { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+.btc-preview { font-size: 0.8rem; color: var(--text-muted); line-height: 1.65; font-style: italic; flex: 1; }
+
+/* Expandable story section — hidden until .open is added by JS */
+.btc-more {
+    display: none;
+    font-size: 0.8rem;
     color: var(--text-muted);
-    font-size: 1.05rem;
-    line-height: 1.8;
-    transition: all 0.3s;
+    line-height: 1.7;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 0.7rem;
+    margin-top: 0.4rem;
 }
 
-.beyond-card:hover {
-    background: var(--glass-hover);
-    border-color: rgba(96, 165, 250, 0.3);
-    transform: translateY(-4px);
+.btc-more.open { display: block; }
+
+/* "the story →" button */
+.btc-btn {
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    text-align: left;
+    transition: color 0.2s;
+}
+
+.btc-btn:hover { color: #fff; }
+
+@media (max-width: 768px) {
+    .bt-card { min-width: 180px; max-width: 180px; }
 }
 
 
-/* ======================================== */
-/* FOOTER */
-/* ======================================== */
+/* ============================================================
+   17. FOOTER
+   ============================================================ */
 
 footer {
     padding: 2rem 0;
@@ -848,14 +1167,15 @@ footer p {
 }
 
 
-/* ======================================== */
-/* INTRO OVERLAY (OPENING ANIMATION) */
-/* ======================================== */
+/* ============================================================
+   18. INTRO OVERLAY
+   Covers the whole screen on load, JS removes it after ~3s
+   ============================================================ */
 
 #intro-overlay {
     position: fixed;
     inset: 0;
-    background: #000008;
+    background: #0a0700;
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -863,6 +1183,7 @@ footer p {
     transition: opacity 1s ease, visibility 1s ease;
 }
 
+/* When JS adds .hidden, it fades out and becomes non-interactive */
 #intro-overlay.hidden {
     opacity: 0;
     visibility: hidden;
@@ -874,6 +1195,7 @@ footer p {
     position: relative;
 }
 
+/* The large name displayed during the intro */
 #intro-name {
     font-family: 'Major Mono Display', monospace;
     font-size: clamp(2.5rem, 8vw, 6rem);
@@ -886,6 +1208,7 @@ footer p {
     gap: 0.05em;
 }
 
+/* Each letter — JS staggers their animation delays */
 .intro-char {
     opacity: 0;
     transform: translateY(40px) scale(0.6);
@@ -893,13 +1216,11 @@ footer p {
     animation: charAppear 0.5s ease forwards;
 }
 
-.intro-space {
-    width: 0.4em;
-}
+.intro-space { width: 0.4em; }
 
 #intro-tagline {
     opacity: 0;
-    color: #93c5fd;
+    color: #fbbf24;
     font-size: 1rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -907,20 +1228,23 @@ footer p {
     animation: fadeUp 0.8s ease 1.8s forwards;
 }
 
+/* Amber line that grows beneath the tagline */
 #intro-line {
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #93c5fd, transparent);
+    background: linear-gradient(90deg, transparent, #fbbf24, transparent);
     margin: 1.2rem auto 0;
     animation: lineGrow 0.8s ease 1.6s forwards;
 }
 
+/* Burst stars container */
 #intro-stars-burst {
     position: absolute;
     inset: -60px;
     pointer-events: none;
 }
 
+/* Individual burst star — JS sets --bx and --by for direction */
 .burst-star {
     position: absolute;
     width: 3px;
@@ -932,9 +1256,10 @@ footer p {
 }
 
 
-/* ======================================== */
-/* UTILITY COMPONENTS (BACK TO TOP BUTTON) */
-/* ======================================== */
+/* ============================================================
+   19. BACK TO TOP BUTTON
+   Fixed bottom-right — JS toggles .visible class on scroll
+   ============================================================ */
 
 #back-to-top {
     position: fixed;
@@ -943,11 +1268,10 @@ footer p {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: rgba(147, 197, 253, 0.1);
-    border: 1px solid rgba(147, 197, 253, 0.3);
-    color: #93c5fd;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: var(--accent);
     font-size: 1.2rem;
-    cursor: pointer;
     z-index: 999;
     opacity: 0;
     transform: translateY(20px);
@@ -961,103 +1285,98 @@ footer p {
 }
 
 #back-to-top:hover {
-    background: rgba(147, 197, 253, 0.2);
-    box-shadow: 0 0 20px rgba(147, 197, 253, 0.3);
+    background: rgba(251, 191, 36, 0.2);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
     transform: translateY(-3px);
 }
 
 
-/* ======================================== */
-/* ANIMATIONS / KEYFRAMES */
-/* ======================================== */
+/* ============================================================
+   20. KEYFRAME ANIMATIONS
+   Reusable animation definitions used throughout the site
+   ============================================================ */
 
+/* Stars pulsing in brightness */
 @keyframes pulse {
-    0% { opacity: 0.8; }
+    0%   { opacity: 0.8; }
     100% { opacity: 0.4; }
 }
 
+/* Embers floating upward and shrinking */
+@keyframes emberFloat {
+    0%   { opacity: 0;    transform: translateY(0) scale(1); }
+    15%  { opacity: 0.25; }
+    85%  { opacity: 0.12; }
+    100% { opacity: 0;    transform: translateY(-120px) scale(0.3); }
+}
+
+/* Shooting star sliding across screen */
+@keyframes shoot {
+    0%   { opacity: 0; transform: translateX(0) rotate(-35deg); }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { opacity: 0; transform: translateX(300px) rotate(-35deg); }
+}
+
+/* Background gradient slowly shifting */
 @keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
+/* Typewriter cursor blinking */
 @keyframes blink {
     50% { opacity: 0; }
 }
 
+/* Skill level bar filling on modal open */
 @keyframes fillBar {
     to { width: var(--fill-width); }
 }
 
+/* Elements fading up into view */
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Intro letter appearing from below */
 @keyframes charAppear {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Intro line growing from center */
 @keyframes lineGrow {
     to { width: 300px; }
 }
 
+/* Burst stars flying outward from center */
 @keyframes burstOut {
     0%   { opacity: 1; transform: translate(0, 0) scale(1); }
     100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
 }
 
-/* ======================================== */
-/* MEDIA QUERIES (RESPONSIVE) */
-/* ======================================== */
 
-/* Base breakpoint for smaller screens handled above in each section.
-   Here we add any global responsive rules if needed. */
-
-/* Example global responsiveness (kept minimal — no design changes) */
+/* ============================================================
+   21. MEDIA QUERIES
+   Responsive adjustments for smaller screens
+   ============================================================ */
 
 @media (max-width: 768px) {
-    h1 {
-        font-size: 2.3rem;
-    }
+    h1 { font-size: 2.3rem; }
+    h2 { font-size: 1.9rem; }
 
-    h2 {
-        font-size: 1.9rem;
-    }
+    .hero-section { padding: 120px 0 60px; }
+    .about-card   { padding: 2rem; }
+    .project-card img { height: 160px; }
 
-    .hero-section {
-        padding: 120px 0 60px;
-    }
+    .creds-grid { grid-template-columns: 1fr; }
 
-    .about-card,
-    .beyond-card,
-    .skill-modal-content {
-        padding: 2rem;
-    }
-
-    .project-card img {
-        height: 160px;
-    }
+    .skill-modal-content { padding: 2rem; }
 }
 
 @media (max-width: 480px) {
-    .cta-button {
-        padding: 0.75rem 1.6rem;
-    }
-
-    .connect-link {
-        padding: 0.75rem 1.1rem;
-        font-size: 0.85rem;
-    }
-
-    .hero-name {
-        font-size: clamp(2.2rem, 9vw, 4rem);
-    }
+    .cta-button { padding: 0.75rem 1.6rem; }
+    .hero-name  { font-size: clamp(2.2rem, 9vw, 4rem); }
 }
-
-
-

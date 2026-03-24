@@ -144,6 +144,12 @@
                             Pola<br>Harsha
                         </h1>
 
+                        <!-- Status badge — remove when exams are done -->
+                        <div class="status-badge">
+                            <span class="status-dot"></span>
+                            📚 Exam Season — slow on projects
+                        </div>
+
                         <!-- Typewriter text — JS fills this in -->
                         <p class="tagline" id="typewriter-text"></p>
 
@@ -193,7 +199,7 @@
                         <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=300&fit=crop" alt="ISS Live Tracker">
                         <h3>ISS Live Tracker</h3>
                         <p>Real-time International Space Station tracker showing live position, orbital path, and ground pass predictions using public NASA APIs.</p>
-                        <a href="https://github.com/polaharshavardhan455/iss_live" class="project-link" target="_blank">View Project →</a>
+                        <a href="https://polaharshavardhan455.github.io/iss_harsha/" class="project-link" target="_blank">View Project →</a>
                     </div>
 
                     <!-- Project 3 — In Progress -->
@@ -452,7 +458,7 @@
 
                 <div class="connect-links">
 
-                    <a href="mailto:polaharshait@zohomail.in" class="connect-link">
+                    <a href="/cdn-cgi/l/email-protection#cdbda2a1aca5acbfbea5aca4b98db7a2a5a2a0aca4a1e3a4a3" class="connect-link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="4" width="20" height="16" rx="2"/>
                             <path d="m2 7 10 7 10-7"/>
@@ -634,6 +640,12 @@
                         <div class="btc-sub">Robin Sharma · Ongoing</div>
                         <div class="btc-preview">full of unique insights,lots of different scenarios , so let's dive into book </div>
                     </div>
+                    <div class="bt-card bt-book">
+                        <div class="btc-num">Reading</div>
+                        <div class="btc-title">learning how to fly</div>
+                        <div class="btc-sub">Dr APJ Abdul Kalam · Ongoing</div>
+                        <div class="btc-preview">my favorite readings in right now </div>
+                    </div>
 
                     <div class="bt-card bt-book bt-next">
                         <div class="btc-num">Next</div>
@@ -665,12 +677,10 @@
          SCRIPTS
          Always placed at the bottom so HTML loads before JS runs
          ============================================================ -->
-    <script src="script.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
 
-    <!-- Back to top button — outside main, sits fixed bottom-right -->
-    <button id="back-to-top" title="Back to top">
-        <span>↑</span>
-    </button>
+    <!-- Back to top button — appears when scrolled down -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">↑</button>
 
 </body>
 </html>

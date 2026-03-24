@@ -1,43 +1,25 @@
 // ============================================================
 // SCRIPT.JS — Pola Harsha Portfolio
-// All JS runs after the HTML is fully loaded (DOMContentLoaded)
-// ============================================================
-//
-// TABLE OF CONTENTS
-// -----------------
-// 1. Global Variables
-// 2. DOM Selectors
-// 3. Utility Functions
-//      - generateStars()
-//      - generateEmbers()
-//      - addShootingStar()
-//      - parallaxLoop()
-//      - typeWrite()
-// 4. Section Logic
-//      - Parallax mouse tracking
-//      - Intro overlay animation
-//      - Skills modal open/close
-//      - Card tilt effect
-//      - Beyond Tech story toggle
-//      - Back to top
-// 5. Scroll Event Listener
-// 6. Intersection Observers
-// 7. Initialization
 // ============================================================
 
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
-    // 1. GLOBAL VARIABLES
-    // Declared at the top so every function below can access them
+    // INTRO SOUND SETUP  (plays when intro starts closing)
     // ============================================================
 
-    // Parallax — tracks where mouse is heading vs where stars currently are
-    let targetX  = 0, targetY  = 0;  // where the mouse is pointing (normalised -1 to +1)
-    let currentX = 0, currentY = 0;  // where the stars currently are (lags behind mouse)
+    const introSound = new Audio('assets/sounds/mixkit-sci-fi-click-900.wav');
+    introSound.volume = 0.6;
 
-    // Typewriter — tracks which role is showing and which character we're on
+
+    // ============================================================
+    // 1. GLOBAL VARIABLES
+    // ============================================================
+
+    let targetX  = 0, targetY  = 0;
+    let currentX = 0, currentY = 0;
+
     const roles = [
         'Cross Domain guy',
         'Electronics Student',
@@ -47,14 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'Python Developer',
         'Vibe Coder'
     ];
-    let roleIndex  = 0;     // which role in the array we're currently showing
-    let charIndex  = 0;     // how many characters are visible right now
-    let isDeleting = false; // true = erasing, false = typing
+    let roleIndex  = 0;
+    let charIndex  = 0;
+    let isDeleting = false;
+    let wordEl     = null;
 
-    // wordEl — the <span> JS types into. Assigned at the bottom after we create the span
-    let wordEl = null;
-
-    // Skills data — used to populate the modal when a skill is clicked
     const skillsData = {
         python:     { name: 'Python',              learnedFrom: 'Coursera (Meta), YouTube (FreeCodeCamp), Personal Projects', certLink: null, certText: null, level: 65 },
         c:          { name: 'C Language',           learnedFrom: 'College Coursework, GeeksForGeeks, HackerRank',              certLink: null, certText: null, level: 50 },
@@ -68,8 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
     // 2. DOM SELECTORS
-    // Grab HTML elements so we can interact with them in JS
-    // getElementById returns one element, querySelectorAll returns a list
     // ============================================================
 
     const pFar  = document.getElementById('stars-far');
@@ -93,9 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. UTILITY FUNCTIONS
     // ============================================================
 
-    // ------ generateStars() ------
-    // Creates star divs and places them randomly inside a container
-    // Each star gets random: position, size, colour, animation timing
     function generateStars(containerId, count) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -103,19 +77,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const colors = ['#ffffff', '#ffffff', '#ffffff', '#fde68a', '#fbbf24', '#f97316'];
 
         for (let i = 0; i < count; i++) {
-            const star    = document.createElement('div');
+            const star     = document.createElement('div');
             star.className = 'star';
 
             star.style.left = `${Math.random() * 100}%`;
             star.style.top  = `${Math.random() * 100}%`;
 
-            const size = Math.random() * 1.8 + 0.5; // 0.5px to 2.3px
+            const size = Math.random() * 1.8 + 0.5;
             star.style.width      = `${size}px`;
             star.style.height     = `${size}px`;
             star.style.background = colors[Math.floor(Math.random() * colors.length)];
             star.style.opacity    = '0.8';
 
-            // CSS custom properties — the animation in style.css reads these
             star.style.setProperty('--dur',   `${(Math.random() * 5 + 3).toFixed(1)}s`);
             star.style.setProperty('--delay', `${(Math.random() * 8).toFixed(1)}s`);
 
@@ -133,9 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ------ generateEmbers() ------
-    // Same as generateStars but uses warm amber/orange colours
-    // and a float-up animation — like embers drifting from a fire
     function generateEmbers(count) {
         const container = document.querySelector('.cosmic-bg');
         if (!container) return;
@@ -148,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         for (let i = 0; i < count; i++) {
-            const ember    = document.createElement('div');
+            const ember     = document.createElement('div');
             ember.className = 'ember';
 
             ember.style.left = `${Math.random() * 100}%`;
@@ -173,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ------ addShootingStar() ------
-    // Creates one shooting star, lets it animate, then removes it from DOM
     function addShootingStar() {
         const container = document.querySelector('.cosmic-bg');
         if (!container) return;
@@ -192,40 +160,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.appendChild(star);
 
-        // Remove element after the animation completes — keeps DOM clean
         setTimeout(() => star.remove(),
             (parseFloat(dur) + parseFloat(delay) + 1) * 1000 * 3);
     }
 
 
-    // ------ parallaxLoop() ------
-    // Runs 60 times per second via requestAnimationFrame
-    // LERP (linear interpolation): moves current position 5% toward target each frame
-    // This creates the smooth "lagging behind" effect
-    //
-    // Formula:  current += (target - current) * speed
-    // Example:  target=100, current=0, speed=0.05
-    //   Frame 1: current = 0 + (100-0)*0.05 = 5
-    //   Frame 2: current = 5 + (100-5)*0.05 = 9.75
-    //   Frame 3: current = 9.75 + (100-9.75)*0.05 = 14.26
-    //   ... slowly approaches 100 but never jumps instantly
     function parallaxLoop() {
         currentX += (targetX - currentX) * 0.05;
         currentY += (targetY - currentY) * 0.05;
 
-        // Far layer moves 10x, mid 22x, near 40x — creates illusion of depth
         if (pFar)  pFar.style.transform  = `translate(${currentX * 10}px, ${currentY * 10}px)`;
         if (pMid)  pMid.style.transform  = `translate(${currentX * 22}px, ${currentY * 22}px)`;
         if (pNear) pNear.style.transform = `translate(${currentX * 40}px, ${currentY * 40}px)`;
 
-        requestAnimationFrame(parallaxLoop); // schedule next frame
+        requestAnimationFrame(parallaxLoop);
     }
 
 
-    // ------ typeWrite() ------
-    // Types one character, then calls itself after a short delay
-    // When the full word is typed, switches to deleting mode
-    // When fully deleted, moves to the next role
     function typeWrite() {
         if (!wordEl) return;
 
@@ -236,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             charIndex++;
             if (charIndex === current.length) {
                 isDeleting = true;
-                setTimeout(typeWrite, 1800); // pause 1.8s before deleting
+                setTimeout(typeWrite, 1800);
                 return;
             }
         } else {
@@ -244,11 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
             charIndex--;
             if (charIndex === 0) {
                 isDeleting = false;
-                roleIndex = (roleIndex + 1) % roles.length; // loop back to start
+                roleIndex = (roleIndex + 1) % roles.length;
             }
         }
 
-        setTimeout(typeWrite, isDeleting ? 60 : 100); // delete faster than type
+        setTimeout(typeWrite, isDeleting ? 60 : 100);
     }
 
 
@@ -256,9 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. SECTION LOGIC
     // ============================================================
 
-    // ------ Parallax mouse tracking ------
-    // Converts mouse position to a value between -1 and +1
-    // (0,0) = top-left corner, (1,1) = bottom-right, (0.5,0.5) = center
     document.addEventListener('mousemove', (e) => {
         targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
         targetY = (e.clientY / window.innerHeight - 0.5) * 2;
@@ -266,25 +214,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ------ Intro overlay animation ------
-    // IIFE = Immediately Invoked Function Expression
-    // The (function(){ ... })() syntax runs this code once immediately
     (function () {
         const overlay = document.getElementById('intro-overlay');
         const chars   = document.querySelectorAll('.intro-char');
         const burst   = document.getElementById('intro-stars-burst');
 
-        // Stagger each letter's delay so they appear one by one
+        // Letters animate immediately — no waiting
         chars.forEach((ch, i) => {
             ch.style.animationDelay = `${0.08 * i + 0.3}s`;
         });
 
-        // Create 20 burst stars — each flies in a different direction
+        // Build burst stars
         for (let i = 0; i < 20; i++) {
             const s     = document.createElement('div');
             s.className = 'burst-star';
 
-            const angle = (i / 20) * 360;            // evenly spread around a circle
-            const dist  = 80 + Math.random() * 80;   // random distance 80–160px
+            const angle = (i / 20) * 360;
+            const dist  = 80 + Math.random() * 80;
 
             s.style.left = '50%';
             s.style.top  = '50%';
@@ -296,9 +242,24 @@ document.addEventListener('DOMContentLoaded', () => {
             burst.appendChild(s);
         }
 
-        // 3.2s → add .hidden (CSS fades it out)
-        // 4.3s → remove from DOM entirely
+        // At 3.2 s the intro starts closing — play sound at that exact moment.
+        // Browsers allow audio triggered by ANY prior interaction on the page
+        // (scrolling, moving mouse, etc.) — the sound fires as the overlay fades.
         setTimeout(() => {
+            introSound.currentTime = 0;
+            introSound.play().catch(() => {
+                // Fallback: if browser still blocks it, play on next interaction
+                const unlock = () => {
+                    introSound.play().catch(() => {});
+                    document.removeEventListener('click',      unlock);
+                    document.removeEventListener('touchstart', unlock);
+                    document.removeEventListener('keydown',    unlock);
+                };
+                document.addEventListener('click',      unlock, { once: true });
+                document.addEventListener('touchstart', unlock, { once: true, passive: true });
+                document.addEventListener('keydown',    unlock, { once: true });
+            });
+
             overlay.classList.add('hidden');
             setTimeout(() => overlay.remove(), 1100);
         }, 3200);
@@ -308,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------ Skills modal — open ------
     skillItems.forEach(item => {
         item.addEventListener('click', () => {
-            const skillKey  = item.getAttribute('data-skill'); // e.g. "python"
+            const skillKey  = item.getAttribute('data-skill');
             const skillInfo = skillsData[skillKey];
 
             if (skillInfo) {
@@ -325,8 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     certItem.style.display = 'none';
                 }
 
-                // Reset bar to 0% first, then animate to the actual level
-                // The 50ms gap forces the browser to process the 0% before transitioning
                 const fillEl = document.getElementById('modalSkillLevel');
                 fillEl.style.width = '0%';
                 setTimeout(() => { fillEl.style.width = skillInfo.level + '%'; }, 50);
@@ -337,7 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ------ Skills modal — close (3 ways) ------
+
+    // ------ Skills modal — close ------
     modalClose.addEventListener('click', () => {
         skillModal.style.display     = 'none';
         document.body.style.overflow = 'auto';
@@ -359,19 +319,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ------ Card tilt effect ------
-    // Calculates how far the cursor is from the card center
-    // Converts that offset into rotateX and rotateY degrees
     document.querySelectorAll('.project-card').forEach(card => {
 
         card.addEventListener('mousemove', (e) => {
             const rect    = card.getBoundingClientRect();
-            const x       = e.clientX - rect.left;  // cursor X relative to card edge
+            const x       = e.clientX - rect.left;
             const y       = e.clientY - rect.top;
             const centerX = rect.width  / 2;
             const centerY = rect.height / 2;
 
-            // ((offset from center) / half-width) gives -1 to +1
-            // multiply by 8 = max 8 degrees of tilt
             const rotateY =  ((x - centerX) / centerX) * 8;
             const rotateX = -((y - centerY) / centerY) * 8;
 
@@ -392,8 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ------ Beyond Tech story toggle ------
-    // Called from onclick="toggleMore('t1')" in the HTML
-    // FIX 2: Button text resets to "the story →" not "read more →"
     function toggleMore(id) {
         const more   = document.getElementById('more-' + id);
         const btn    = more.previousElementSibling;
@@ -403,7 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.textContent = isOpen ? 'the story →' : 'close ↑';
     }
 
-    // Expose to global scope so HTML onclick can reach it
     window.toggleMore = toggleMore;
 
 
@@ -415,14 +368,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
     // 5. SCROLL EVENT LISTENER
-    // Fires on every scroll — kept lightweight (3 things only)
     // ============================================================
 
     window.addEventListener('scroll', () => {
         if (header) header.classList.toggle('scrolled', window.scrollY > 50);
         if (btt)    btt.classList.toggle('visible',   window.scrollY > 400);
 
-        // Progress bar: scrolled distance / total scrollable height = percentage
         const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
         document.getElementById('scroll-bar').style.width = scrolled + '%';
     });
@@ -430,11 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
     // 6. INTERSECTION OBSERVERS
-    // More efficient than scroll events for watching elements
-    // Browser tells us when elements enter/exit the viewport
     // ============================================================
 
-    // Active nav highlight — fires when a section is 45% visible
     const navObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -451,9 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sections.forEach(s => navObserver.observe(s));
 
 
-    // Fade in sections — fires when 10% of a section is visible
-    // Section starts at opacity 0 and shifted down 20px
-    // Observer adds the transition back to visible position
     const fadeObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -473,19 +418,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
     // 7. INITIALIZATION
-    // Everything that runs once on page load
     // ============================================================
 
-    // Three layers of stars — more stars on near layer = more density effect
     generateStars('stars-far',  30);
-generateStars('stars-mid',  35);
-generateStars('stars-near', 40);
-generateEmbers(15);
+    generateStars('stars-mid',  35);
+    generateStars('stars-near', 40);
+    generateEmbers(15);
 
-    // Start the parallax render loop
     parallaxLoop();
 
-    // Set up typewriter HTML then assign wordEl and start
     typeEl.innerHTML = '<span id="tw-word"></span><span class="typewriter-cursor"></span>';
     wordEl = document.getElementById('tw-word');
     typeWrite();

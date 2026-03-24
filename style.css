@@ -432,6 +432,44 @@ h1 {
     opacity: 0.6;
 }
 
+/* ── Status badge — Style A pill — remove .status-badge block when exams are done ── */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    margin-bottom: 1.4rem;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    color: #fde68a;
+    letter-spacing: 0.04em;
+    font-family: 'Inter', sans-serif;
+    animation: badgeFadeIn 0.8s ease both;
+    animation-delay: 0.3s;
+}
+
+/* Pulsing dot — signals "live / active" status */
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fbbf24;
+    flex-shrink: 0;
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes badgeFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+}
+
 /* Typewriter area — JS writes into the span inside this */
 .tagline {
     font-size: 1.05rem;

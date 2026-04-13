@@ -432,3 +432,90 @@ document.addEventListener('DOMContentLoaded', () => {
     typeWrite();
 
 }); // end DOMContentLoaded
+
+
+// AI Lab card — animated dots
+(function(){
+    const cvs = document.getElementById('lab-mini-canvas');
+    if (!cvs) return;
+    const c = cvs.getContext('2d');
+    let nodes = [];
+    function init() {
+        cvs.width = cvs.parentElement.offsetWidth;
+        cvs.height = cvs.parentElement.offsetHeight;
+        nodes = Array.from({length: 28}, () => ({
+            x: Math.random() * cvs.width,
+            y: Math.random() * cvs.height,
+            vx: (Math.random()-0.5)*0.5,
+            vy: (Math.random()-0.5)*0.5,
+            r: Math.random()*1.2+0.4
+        }));
+    }
+    function draw() {
+        c.clearRect(0,0,cvs.width,cvs.height);
+        for (let i=0;i<nodes.length;i++) {
+            for (let j=i+1;j<nodes.length;j++) {
+                const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+                const d=Math.sqrt(dx*dx+dy*dy);
+                if (d<100) {
+                    c.beginPath(); c.moveTo(nodes[i].x,nodes[i].y);
+                    c.lineTo(nodes[j].x,nodes[j].y);
+                    c.strokeStyle=`rgba(0,255,231,${(1-d/100)*0.2})`;
+                    c.lineWidth=0.5; c.stroke();
+                }
+            }
+        }
+        for (const n of nodes) {
+            c.beginPath(); c.arc(n.x,n.y,n.r,0,Math.PI*2);
+            c.fillStyle='rgba(0,255,231,0.4)'; c.fill();
+            n.x+=n.vx; n.y+=n.vy;
+            if(n.x<0||n.x>cvs.width) n.vx*=-1;
+            if(n.y<0||n.y>cvs.height) n.vy*=-1;
+        }
+        requestAnimationFrame(draw);
+    }
+    init(); draw();
+})();
+
+// AI Lab featured section — animated dots
+(function(){
+    const cvs = document.getElementById('alf-canvas');
+    if (!cvs) return;
+    const c = cvs.getContext('2d');
+    let nodes = [];
+    function init() {
+        cvs.width = cvs.parentElement.offsetWidth;
+        cvs.height = cvs.parentElement.offsetHeight;
+        nodes = Array.from({length: 40}, () => ({
+            x: Math.random() * cvs.width,
+            y: Math.random() * cvs.height,
+            vx: (Math.random()-0.5)*0.4,
+            vy: (Math.random()-0.5)*0.4,
+            r: Math.random()*1.5+0.5
+        }));
+    }
+    function draw() {
+        c.clearRect(0,0,cvs.width,cvs.height);
+        for (let i=0;i<nodes.length;i++) {
+            for (let j=i+1;j<nodes.length;j++) {
+                const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+                const d=Math.sqrt(dx*dx+dy*dy);
+                if (d<120) {
+                    c.beginPath(); c.moveTo(nodes[i].x,nodes[i].y);
+                    c.lineTo(nodes[j].x,nodes[j].y);
+                    c.strokeStyle=`rgba(0,255,231,${(1-d/120)*0.22})`;
+                    c.lineWidth=0.6; c.stroke();
+                }
+            }
+        }
+        for (const n of nodes) {
+            c.beginPath(); c.arc(n.x,n.y,n.r,0,Math.PI*2);
+            c.fillStyle='rgba(0,255,231,0.45)'; c.fill();
+            n.x+=n.vx; n.y+=n.vy;
+            if(n.x<0||n.x>cvs.width) n.vx*=-1;
+            if(n.y<0||n.y>cvs.height) n.vy*=-1;
+        }
+        requestAnimationFrame(draw);
+    }
+    init(); draw();
+})();

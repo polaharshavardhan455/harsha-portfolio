@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. GLOBAL VARIABLES
     // ============================================================
 
-    let targetX  = 0, targetY  = 0;
+    let targetX = 0, targetY = 0;
     let currentX = 0, currentY = 0;
 
     const roles = [
@@ -29,19 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'Python Developer',
         'Vibe Coder'
     ];
-    let roleIndex  = 0;
-    let charIndex  = 0;
+    let roleIndex = 0;
+    let charIndex = 0;
     let isDeleting = false;
-    let wordEl     = null;
+    let wordEl = null;
 
     const skillsData = {
-        python:     { name: 'Python',              learnedFrom: 'Coursera (Meta), YouTube (FreeCodeCamp), Personal Projects', certLink: null, certText: null, level: 65 },
-        c:          { name: 'C Language',           learnedFrom: 'College Coursework, GeeksForGeeks, HackerRank',              certLink: null, certText: null, level: 50 },
-        embedded:   { name: 'Embedded Programming', learnedFrom: 'College labs, Workshops, YouTube, Team project',             certLink: null, certText: null, level: 50 },
-        matlab:     { name: 'MATLAB',               learnedFrom: 'College Lab, MathWorks Tutorials, AI explanations',          certLink: null, certText: null, level: 40 },
-        htmlcss:    { name: 'HTML / CSS',           learnedFrom: 'W3Schools, Personal Projects',                               certLink: null, certText: null, level: 80 },
-        javascript: { name: 'JavaScript',           learnedFrom: 'Personal Projects, YouTube, AI explanations',                certLink: null, certText: null, level: 50 },
-        genai:      { name: 'Gen AI',               learnedFrom: 'Google AI Essentials, YouTube, Self-exploration',            certLink: null, certText: null, level: 65 }
+        python: { name: 'Python', learnedFrom: 'Coursera (Meta), YouTube (FreeCodeCamp), Personal Projects', certLink: null, certText: null, level: 65 },
+        c: { name: 'C Language', learnedFrom: 'College Coursework, GeeksForGeeks, HackerRank', certLink: null, certText: null, level: 50 },
+        embedded: { name: 'Embedded Programming', learnedFrom: 'College labs, Workshops, YouTube, Team project', certLink: null, certText: null, level: 50 },
+        matlab: { name: 'MATLAB', learnedFrom: 'College Lab, MathWorks Tutorials, AI explanations', certLink: null, certText: null, level: 40 },
+        htmlcss: { name: 'HTML / CSS', learnedFrom: 'W3Schools, Personal Projects', certLink: null, certText: null, level: 80 },
+        javascript: { name: 'JavaScript', learnedFrom: 'Personal Projects, YouTube, AI explanations', certLink: null, certText: null, level: 50 },
+        genai: { name: 'Gen AI', learnedFrom: 'Google AI Essentials, YouTube, Self-exploration', certLink: null, certText: null, level: 65 }
     };
 
 
@@ -49,12 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. DOM SELECTORS
     // ============================================================
 
-    const pFar  = document.getElementById('stars-far');
-    const pMid  = document.getElementById('stars-mid');
+    const pFar = document.getElementById('stars-far');
+    const pMid = document.getElementById('stars-mid');
     const pNear = document.getElementById('stars-near');
 
-    const sections   = document.querySelectorAll('section[id]');
-    const navLinks   = document.querySelectorAll('.nav-menu a');
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-menu a');
     const sectionEls = document.querySelectorAll('.section');
 
     const skillModal = document.getElementById('skillModal');
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const skillItems = document.querySelectorAll('.skill-item');
 
     const typeEl = document.getElementById('typewriter-text');
-    const btt    = document.getElementById('back-to-top');
+    const btt = document.getElementById('back-to-top');
     const header = document.querySelector('.header');
 
 
@@ -77,19 +77,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const colors = ['#ffffff', '#ffffff', '#ffffff', '#fde68a', '#fbbf24', '#f97316'];
 
         for (let i = 0; i < count; i++) {
-            const star     = document.createElement('div');
+            const star = document.createElement('div');
             star.className = 'star';
 
             star.style.left = `${Math.random() * 100}%`;
-            star.style.top  = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
 
             const size = Math.random() * 1.8 + 0.5;
-            star.style.width      = `${size}px`;
-            star.style.height     = `${size}px`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
             star.style.background = colors[Math.floor(Math.random() * colors.length)];
-            star.style.opacity    = '0.8';
+            star.style.opacity = '0.8';
 
-            star.style.setProperty('--dur',   `${(Math.random() * 5 + 3).toFixed(1)}s`);
+            star.style.setProperty('--dur', `${(Math.random() * 5 + 3).toFixed(1)}s`);
             star.style.setProperty('--delay', `${(Math.random() * 8).toFixed(1)}s`);
 
             if (size > 1.5) {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (containerId === 'stars-far') {
-                star.style.animation      = 'pulse 4s infinite alternate ease-in-out';
+                star.style.animation = 'pulse 4s infinite alternate ease-in-out';
                 star.style.animationDelay = `${Math.random() * 4}s`;
             }
 
@@ -118,20 +118,20 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         for (let i = 0; i < count; i++) {
-            const ember     = document.createElement('div');
+            const ember = document.createElement('div');
             ember.className = 'ember';
 
             ember.style.left = `${Math.random() * 100}%`;
-            ember.style.top  = `${Math.random() * 100}%`;
+            ember.style.top = `${Math.random() * 100}%`;
 
             const size = Math.random() * 3 + 1.5;
-            ember.style.width      = `${size}px`;
-            ember.style.height     = `${size}px`;
+            ember.style.width = `${size}px`;
+            ember.style.height = `${size}px`;
             ember.style.background = colors[Math.floor(Math.random() * colors.length)];
 
-            const dur   = (Math.random() * 6 + 5).toFixed(1);
+            const dur = (Math.random() * 6 + 5).toFixed(1);
             const delay = (Math.random() * 10).toFixed(1);
-            ember.style.setProperty('--dur',   `${dur}s`);
+            ember.style.setProperty('--dur', `${dur}s`);
             ember.style.setProperty('--delay', `${delay}s`);
 
             if (size > 3) {
@@ -147,15 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.querySelector('.cosmic-bg');
         if (!container) return;
 
-        const star     = document.createElement('div');
+        const star = document.createElement('div');
         star.className = 'shooting-star';
         star.style.left = `${Math.random() * 70}%`;
-        star.style.top  = `${Math.random() * 40}%`;
+        star.style.top = `${Math.random() * 40}%`;
 
-        const dur   = (Math.random() * 3 + 6).toFixed(1);
+        const dur = (Math.random() * 3 + 6).toFixed(1);
         const delay = (Math.random() * 12).toFixed(1);
 
-        star.style.setProperty('--shoot-dur',   `${dur}s`);
+        star.style.setProperty('--shoot-dur', `${dur}s`);
         star.style.setProperty('--shoot-delay', `${delay}s`);
 
         container.appendChild(star);
@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentX += (targetX - currentX) * 0.05;
         currentY += (targetY - currentY) * 0.05;
 
-        if (pFar)  pFar.style.transform  = `translate(${currentX * 10}px, ${currentY * 10}px)`;
-        if (pMid)  pMid.style.transform  = `translate(${currentX * 22}px, ${currentY * 22}px)`;
+        if (pFar) pFar.style.transform = `translate(${currentX * 10}px, ${currentY * 10}px)`;
+        if (pMid) pMid.style.transform = `translate(${currentX * 22}px, ${currentY * 22}px)`;
         if (pNear) pNear.style.transform = `translate(${currentX * 40}px, ${currentY * 40}px)`;
 
         requestAnimationFrame(parallaxLoop);
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
 
     document.addEventListener('mousemove', (e) => {
-        targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
+        targetX = (e.clientX / window.innerWidth - 0.5) * 2;
         targetY = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
@@ -216,8 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------ Intro overlay animation ------
     (function () {
         const overlay = document.getElementById('intro-overlay');
-        const chars   = document.querySelectorAll('.intro-char');
-        const burst   = document.getElementById('intro-stars-burst');
+        const chars = document.querySelectorAll('.intro-char');
+        const burst = document.getElementById('intro-stars-burst');
 
         // Letters animate immediately — no waiting
         chars.forEach((ch, i) => {
@@ -226,18 +226,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Build burst stars
         for (let i = 0; i < 20; i++) {
-            const s     = document.createElement('div');
+            const s = document.createElement('div');
             s.className = 'burst-star';
 
             const angle = (i / 20) * 360;
-            const dist  = 80 + Math.random() * 80;
+            const dist = 80 + Math.random() * 80;
 
             s.style.left = '50%';
-            s.style.top  = '50%';
+            s.style.top = '50%';
             s.style.setProperty('--bx', `${Math.cos(angle * Math.PI / 180) * dist}px`);
             s.style.setProperty('--by', `${Math.sin(angle * Math.PI / 180) * dist}px`);
             s.style.animationDelay = `${1.4 + Math.random() * 0.3}s`;
-            s.style.background     = ['#fff', '#fbbf24', '#f97316', '#fde68a'][i % 4];
+            s.style.background = ['#fff', '#fbbf24', '#f97316', '#fde68a'][i % 4];
 
             burst.appendChild(s);
         }
@@ -250,14 +250,14 @@ document.addEventListener('DOMContentLoaded', () => {
             introSound.play().catch(() => {
                 // Fallback: if browser still blocks it, play on next interaction
                 const unlock = () => {
-                    introSound.play().catch(() => {});
-                    document.removeEventListener('click',      unlock);
+                    introSound.play().catch(() => { });
+                    document.removeEventListener('click', unlock);
                     document.removeEventListener('touchstart', unlock);
-                    document.removeEventListener('keydown',    unlock);
+                    document.removeEventListener('keydown', unlock);
                 };
-                document.addEventListener('click',      unlock, { once: true });
+                document.addEventListener('click', unlock, { once: true });
                 document.addEventListener('touchstart', unlock, { once: true, passive: true });
-                document.addEventListener('keydown',    unlock, { once: true });
+                document.addEventListener('keydown', unlock, { once: true });
             });
 
             overlay.classList.add('hidden');
@@ -269,18 +269,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------ Skills modal — open ------
     skillItems.forEach(item => {
         item.addEventListener('click', () => {
-            const skillKey  = item.getAttribute('data-skill');
+            const skillKey = item.getAttribute('data-skill');
             const skillInfo = skillsData[skillKey];
 
             if (skillInfo) {
-                document.getElementById('modalSkillName').textContent   = skillInfo.name;
+                document.getElementById('modalSkillName').textContent = skillInfo.name;
                 document.getElementById('modalLearnedFrom').textContent = skillInfo.learnedFrom;
 
                 const certLink = document.getElementById('modalCertLink');
                 const certItem = certLink.closest('.skill-detail-item');
                 if (skillInfo.certLink) {
-                    certLink.textContent   = skillInfo.certText;
-                    certLink.href          = skillInfo.certLink;
+                    certLink.textContent = skillInfo.certText;
+                    certLink.href = skillInfo.certLink;
                     certItem.style.display = 'flex';
                 } else {
                     certItem.style.display = 'none';
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fillEl.style.width = '0%';
                 setTimeout(() => { fillEl.style.width = skillInfo.level + '%'; }, 50);
 
-                skillModal.style.display     = 'block';
+                skillModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
             }
         });
@@ -299,20 +299,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ------ Skills modal — close ------
     modalClose.addEventListener('click', () => {
-        skillModal.style.display     = 'none';
+        skillModal.style.display = 'none';
         document.body.style.overflow = 'auto';
     });
 
     window.addEventListener('click', (e) => {
         if (e.target === skillModal) {
-            skillModal.style.display     = 'none';
+            skillModal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && skillModal.style.display === 'block') {
-            skillModal.style.display     = 'none';
+            skillModal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
     });
@@ -322,25 +322,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.project-card').forEach(card => {
 
         card.addEventListener('mousemove', (e) => {
-            const rect    = card.getBoundingClientRect();
-            const x       = e.clientX - rect.left;
-            const y       = e.clientY - rect.top;
-            const centerX = rect.width  / 2;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const rotateY =  ((x - centerX) / centerX) * 8;
+            const rotateY = ((x - centerX) / centerX) * 8;
             const rotateX = -((y - centerY) / centerY) * 8;
 
-            card.style.transform   = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-            card.style.transition  = 'transform 0.1s ease';
-            card.style.boxShadow   = `0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(251,191,36,0.15)`;
+            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+            card.style.transition = 'transform 0.1s ease';
+            card.style.boxShadow = `0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(251,191,36,0.15)`;
             card.style.borderColor = 'rgba(251,191,36,0.4)';
         });
 
         card.addEventListener('mouseleave', () => {
-            card.style.transform   = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)';
-            card.style.transition  = 'transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease';
-            card.style.boxShadow   = '';
+            card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)';
+            card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease';
+            card.style.boxShadow = '';
             card.style.borderColor = '';
         });
 
@@ -349,8 +349,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ------ Beyond Tech story toggle ------
     function toggleMore(id) {
-        const more   = document.getElementById('more-' + id);
-        const btn    = more.previousElementSibling;
+        const more = document.getElementById('more-' + id);
+        const btn = more.previousElementSibling;
         const isOpen = more.classList.contains('open');
 
         more.classList.toggle('open');
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', () => {
         if (header) header.classList.toggle('scrolled', window.scrollY > 50);
-        if (btt)    btt.classList.toggle('visible',   window.scrollY > 400);
+        if (btt) btt.classList.toggle('visible', window.scrollY > 400);
 
         const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
         document.getElementById('scroll-bar').style.width = scrolled + '%';
@@ -402,15 +402,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const fadeObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity   = '1';
+                entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
             }
         });
     }, { threshold: 0.1 });
 
     sectionEls.forEach(el => {
-        el.style.opacity    = '0';
-        el.style.transform  = 'translateY(20px)';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         fadeObs.observe(el);
     });
@@ -420,8 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. INITIALIZATION
     // ============================================================
 
-    generateStars('stars-far',  30);
-    generateStars('stars-mid',  35);
+    generateStars('stars-far', 30);
+    generateStars('stars-mid', 35);
     generateStars('stars-near', 40);
     generateEmbers(15);
 
@@ -433,89 +433,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 }); // end DOMContentLoaded
 
-
-// AI Lab card — animated dots
-(function(){
-    const cvs = document.getElementById('lab-mini-canvas');
-    if (!cvs) return;
-    const c = cvs.getContext('2d');
-    let nodes = [];
-    function init() {
-        cvs.width = cvs.parentElement.offsetWidth;
-        cvs.height = cvs.parentElement.offsetHeight;
-        nodes = Array.from({length: 28}, () => ({
-            x: Math.random() * cvs.width,
-            y: Math.random() * cvs.height,
-            vx: (Math.random()-0.5)*0.5,
-            vy: (Math.random()-0.5)*0.5,
-            r: Math.random()*1.2+0.4
-        }));
-    }
-    function draw() {
-        c.clearRect(0,0,cvs.width,cvs.height);
-        for (let i=0;i<nodes.length;i++) {
-            for (let j=i+1;j<nodes.length;j++) {
-                const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
-                const d=Math.sqrt(dx*dx+dy*dy);
-                if (d<100) {
-                    c.beginPath(); c.moveTo(nodes[i].x,nodes[i].y);
-                    c.lineTo(nodes[j].x,nodes[j].y);
-                    c.strokeStyle=`rgba(0,255,231,${(1-d/100)*0.2})`;
-                    c.lineWidth=0.5; c.stroke();
-                }
-            }
-        }
-        for (const n of nodes) {
-            c.beginPath(); c.arc(n.x,n.y,n.r,0,Math.PI*2);
-            c.fillStyle='rgba(0,255,231,0.4)'; c.fill();
-            n.x+=n.vx; n.y+=n.vy;
-            if(n.x<0||n.x>cvs.width) n.vx*=-1;
-            if(n.y<0||n.y>cvs.height) n.vy*=-1;
-        }
-        requestAnimationFrame(draw);
-    }
-    init(); draw();
-})();
-
-// AI Lab featured section — animated dots
-(function(){
-    const cvs = document.getElementById('alf-canvas');
-    if (!cvs) return;
-    const c = cvs.getContext('2d');
-    let nodes = [];
-    function init() {
-        cvs.width = cvs.parentElement.offsetWidth;
-        cvs.height = cvs.parentElement.offsetHeight;
-        nodes = Array.from({length: 40}, () => ({
-            x: Math.random() * cvs.width,
-            y: Math.random() * cvs.height,
-            vx: (Math.random()-0.5)*0.4,
-            vy: (Math.random()-0.5)*0.4,
-            r: Math.random()*1.5+0.5
-        }));
-    }
-    function draw() {
-        c.clearRect(0,0,cvs.width,cvs.height);
-        for (let i=0;i<nodes.length;i++) {
-            for (let j=i+1;j<nodes.length;j++) {
-                const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
-                const d=Math.sqrt(dx*dx+dy*dy);
-                if (d<120) {
-                    c.beginPath(); c.moveTo(nodes[i].x,nodes[i].y);
-                    c.lineTo(nodes[j].x,nodes[j].y);
-                    c.strokeStyle=`rgba(0,255,231,${(1-d/120)*0.22})`;
-                    c.lineWidth=0.6; c.stroke();
-                }
-            }
-        }
-        for (const n of nodes) {
-            c.beginPath(); c.arc(n.x,n.y,n.r,0,Math.PI*2);
-            c.fillStyle='rgba(0,255,231,0.45)'; c.fill();
-            n.x+=n.vx; n.y+=n.vy;
-            if(n.x<0||n.x>cvs.width) n.vx*=-1;
-            if(n.y<0||n.y>cvs.height) n.vy*=-1;
-        }
-        requestAnimationFrame(draw);
-    }
-    init(); draw();
-})();

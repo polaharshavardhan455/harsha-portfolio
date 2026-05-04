@@ -1,27 +1,21 @@
 // ============================================================
-// SCRIPT.JS — Pola Harsha Portfolio
+// SCRIPT.JS — Pola Harsha Portfolio — PARTICLE CONSTELLATION
 // ============================================================
-
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
-    // INTRO SOUND SETUP  (plays when intro starts closing)
+    // SOUND
     // ============================================================
-
     const introSound = new Audio('assets/sounds/mixkit-sci-fi-click-900.wav');
-    introSound.volume = 0.6;
+    introSound.volume = 0.5;
 
 
     // ============================================================
-    // 1. GLOBAL VARIABLES
+    // 1. TYPEWRITER DATA
     // ============================================================
-
-    let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
-
     const roles = [
-        'Cross Domain guy',
+        'Cross Domain Guy',
         'Electronics Student',
         'AI Player',
         'Solo Traveler',
@@ -29,157 +23,244 @@ document.addEventListener('DOMContentLoaded', () => {
         'Python Developer',
         'Vibe Coder'
     ];
-    let roleIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let wordEl = null;
+    let roleIndex = 0, charIndex = 0, isDeleting = false, wordEl = null;
 
+
+    // ============================================================
+    // 2. SKILLS DATA
+    // ============================================================
     const skillsData = {
-        python: { name: 'Python', learnedFrom: 'Coursera (Meta), YouTube (FreeCodeCamp), Personal Projects', certLink: null, certText: null, level: 65 },
-        c: { name: 'C Language', learnedFrom: 'College Coursework, GeeksForGeeks, HackerRank', certLink: null, certText: null, level: 50 },
-        embedded: { name: 'Embedded Programming', learnedFrom: 'College labs, Workshops, YouTube, Team project', certLink: null, certText: null, level: 50 },
-        matlab: { name: 'MATLAB', learnedFrom: 'College Lab, MathWorks Tutorials, AI explanations', certLink: null, certText: null, level: 40 },
-        htmlcss: { name: 'HTML / CSS', learnedFrom: 'W3Schools, Personal Projects', certLink: null, certText: null, level: 80 },
-        javascript: { name: 'JavaScript', learnedFrom: 'Personal Projects, YouTube, AI explanations', certLink: null, certText: null, level: 50 },
-        genai: { name: 'Gen AI', learnedFrom: 'Google AI Essentials, YouTube, Self-exploration', certLink: null, certText: null, level: 65 }
+        python: { name: 'Python', learnedFrom: 'Coursera (Meta), YouTube (FreeCodeCamp), Personal Projects', certLink: null, level: 65 },
+        c: { name: 'C Language', learnedFrom: 'College Coursework, GeeksForGeeks, HackerRank', certLink: null, level: 50 },
+        embedded: { name: 'Embedded Programming', learnedFrom: 'College labs, Workshops, YouTube, Team project', certLink: null, level: 50 },
+        matlab: { name: 'MATLAB', learnedFrom: 'College Lab, MathWorks Tutorials, AI explanations', certLink: null, level: 40 },
+        htmlcss: { name: 'HTML / CSS', learnedFrom: 'W3Schools, Personal Projects', certLink: null, level: 80 },
+        javascript: { name: 'JavaScript', learnedFrom: 'Personal Projects, YouTube, AI explanations', certLink: null, level: 50 },
+        genai: { name: 'Gen AI', learnedFrom: 'Google AI Essentials, YouTube, Self-exploration', certLink: null, level: 65 }
     };
 
 
     // ============================================================
-    // 2. DOM SELECTORS
+    // 3. DOM REFS
     // ============================================================
-
-    const pFar = document.getElementById('stars-far');
-    const pMid = document.getElementById('stars-mid');
-    const pNear = document.getElementById('stars-near');
-
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-menu a');
     const sectionEls = document.querySelectorAll('.section');
-
     const skillModal = document.getElementById('skillModal');
     const modalClose = document.querySelector('.skill-modal-close');
     const skillItems = document.querySelectorAll('.skill-item');
-
     const typeEl = document.getElementById('typewriter-text');
     const btt = document.getElementById('back-to-top');
     const header = document.querySelector('.header');
+    const scrollBar = document.getElementById('scroll-bar');
 
 
     // ============================================================
-    // 3. UTILITY FUNCTIONS
+    // 4. PARTICLE CONSTELLATION CANVAS
     // ============================================================
 
-    function generateStars(containerId, count) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
 
-        const colors = ['#ffffff', '#ffffff', '#ffffff', '#fde68a', '#fbbf24', '#f97316'];
+    let particles = [];
+    let mousePos = { x: -9999, y: -9999 };
+    const CONNECT_DIST = 130;
+    const MOUSE_RADIUS = 160;
+    const MOUSE_REPEL = 0.018;
 
-        for (let i = 0; i < count; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
 
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
+    window.addEventListener('mousemove', e => {
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => { mousePos.x = -9999; mousePos.y = -9999; });
 
-            const size = Math.random() * 1.8 + 0.5;
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.background = colors[Math.floor(Math.random() * colors.length)];
-            star.style.opacity = '0.8';
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.ox = this.x;    // origin for gentle return
+            this.oy = this.y;
+            this.vx = (Math.random() - 0.5) * 0.35;
+            this.vy = (Math.random() - 0.5) * 0.35;
+            this.size = Math.random() * 1.6 + 0.4;
+            this.opacity = Math.random() * 0.4 + 0.25;
+            // each particle has a slight cyan or white tint
+            this.isCyan = Math.random() < 0.25;
+        }
 
-            star.style.setProperty('--dur', `${(Math.random() * 5 + 3).toFixed(1)}s`);
-            star.style.setProperty('--delay', `${(Math.random() * 8).toFixed(1)}s`);
+        update() {
+            // Drift
+            this.x += this.vx;
+            this.y += this.vy;
 
-            if (size > 1.5) {
-                star.style.boxShadow = `0 0 ${Math.round(size * 3)}px rgba(255,255,255,0.6)`;
+            // Mouse repulsion — particles move away from cursor
+            const dx = this.x - mousePos.x;
+            const dy = this.y - mousePos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MOUSE_RADIUS && dist > 0) {
+                const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+                this.x += (dx / dist) * force * force * MOUSE_RADIUS * MOUSE_REPEL * 6;
+                this.y += (dy / dist) * force * force * MOUSE_RADIUS * MOUSE_REPEL * 6;
             }
 
-            if (containerId === 'stars-far') {
-                star.style.animation = 'pulse 4s infinite alternate ease-in-out';
-                star.style.animationDelay = `${Math.random() * 4}s`;
-            }
+            // Wrap edges
+            if (this.x < -10) this.x = canvas.width + 10;
+            if (this.x > canvas.width + 10) this.x = -10;
+            if (this.y < -10) this.y = canvas.height + 10;
+            if (this.y > canvas.height + 10) this.y = -10;
+        }
 
-            container.appendChild(star);
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+
+            if (this.isCyan) {
+                ctx.fillStyle = `rgba(34,211,238,${this.opacity * 0.9})`;
+                if (this.size > 1.2) {
+                    ctx.shadowColor = 'rgba(34,211,238,0.6)';
+                    ctx.shadowBlur = 6;
+                }
+            } else {
+                ctx.fillStyle = `rgba(200,220,255,${this.opacity})`;
+                ctx.shadowBlur = 0;
+            }
+            ctx.fill();
+            ctx.shadowBlur = 0;
         }
     }
 
+    function initParticles() {
+        const density = (canvas.width * canvas.height) / 9000;
+        const count = Math.min(150, Math.max(60, Math.floor(density)));
+        particles = [];
+        for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
 
-    function generateEmbers(count) {
-        const container = document.querySelector('.cosmic-bg');
-        if (!container) return;
+    function drawConnections() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
 
-        const colors = [
-            'rgba(251,191,36,0.8)',
-            'rgba(249,115,22,0.7)',
-            'rgba(234,88,12,0.6)',
-            'rgba(253,224,71,0.7)',
-        ];
+                if (dist < CONNECT_DIST) {
+                    const alpha = (1 - dist / CONNECT_DIST) * 0.35;
 
-        for (let i = 0; i < count; i++) {
-            const ember = document.createElement('div');
-            ember.className = 'ember';
+                    // Lines near mouse glow brighter cyan
+                    const mx = (particles[i].x + particles[j].x) / 2;
+                    const my = (particles[i].y + particles[j].y) / 2;
+                    const mdx = mx - mousePos.x;
+                    const mdy = my - mousePos.y;
+                    const md = Math.sqrt(mdx * mdx + mdy * mdy);
+                    const boost = md < 200 ? (1 - md / 200) * 0.5 : 0;
 
-            ember.style.left = `${Math.random() * 100}%`;
-            ember.style.top = `${Math.random() * 100}%`;
-
-            const size = Math.random() * 3 + 1.5;
-            ember.style.width = `${size}px`;
-            ember.style.height = `${size}px`;
-            ember.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-            const dur = (Math.random() * 6 + 5).toFixed(1);
-            const delay = (Math.random() * 10).toFixed(1);
-            ember.style.setProperty('--dur', `${dur}s`);
-            ember.style.setProperty('--delay', `${delay}s`);
-
-            if (size > 3) {
-                ember.style.boxShadow = `0 0 ${Math.round(size * 4)}px rgba(251,191,36,0.5)`;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(34,211,238,${alpha + boost})`;
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                }
             }
-
-            container.appendChild(ember);
         }
     }
 
-
-    function addShootingStar() {
-        const container = document.querySelector('.cosmic-bg');
-        if (!container) return;
-
-        const star = document.createElement('div');
-        star.className = 'shooting-star';
-        star.style.left = `${Math.random() * 70}%`;
-        star.style.top = `${Math.random() * 40}%`;
-
-        const dur = (Math.random() * 3 + 6).toFixed(1);
-        const delay = (Math.random() * 12).toFixed(1);
-
-        star.style.setProperty('--shoot-dur', `${dur}s`);
-        star.style.setProperty('--shoot-delay', `${delay}s`);
-
-        container.appendChild(star);
-
-        setTimeout(() => star.remove(),
-            (parseFloat(dur) + parseFloat(delay) + 1) * 1000 * 3);
+    // Extra: lines from nearest particles to mouse cursor
+    function drawMouseLines() {
+        if (mousePos.x < 0) return;
+        let closest = [];
+        particles.forEach(p => {
+            const dx = p.x - mousePos.x;
+            const dy = p.y - mousePos.y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 120) closest.push({ p, d });
+        });
+        closest.sort((a, b) => a.d - b.d);
+        closest.slice(0, 5).forEach(({ p, d }) => {
+            const alpha = (1 - d / 120) * 0.5;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mousePos.x, mousePos.y);
+            ctx.strokeStyle = `rgba(99,102,241,${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+        });
+        // cursor dot
+        ctx.beginPath();
+        ctx.arc(mousePos.x, mousePos.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(99,102,241,0.6)';
+        ctx.fill();
     }
 
-
-    function parallaxLoop() {
-        currentX += (targetX - currentX) * 0.05;
-        currentY += (targetY - currentY) * 0.05;
-
-        if (pFar) pFar.style.transform = `translate(${currentX * 10}px, ${currentY * 10}px)`;
-        if (pMid) pMid.style.transform = `translate(${currentX * 22}px, ${currentY * 22}px)`;
-        if (pNear) pNear.style.transform = `translate(${currentX * 40}px, ${currentY * 40}px)`;
-
-        requestAnimationFrame(parallaxLoop);
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawConnections();
+        drawMouseLines();
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animateParticles);
     }
 
+    initParticles();
+    animateParticles();
 
+
+    // ============================================================
+    // 5. INTRO OVERLAY
+    // ============================================================
+    (() => {
+        const overlay = document.getElementById('intro-overlay');
+        if (!overlay) return;
+
+        const chars = overlay.querySelectorAll('.intro-char');
+        const burst = document.getElementById('intro-stars-burst');
+
+        chars.forEach((ch, i) => {
+            ch.style.animationDelay = `${0.08 * i + 0.3}s`;
+        });
+
+        // Burst particles — cyan + white
+        for (let i = 0; i < 24; i++) {
+            const s = document.createElement('div');
+            s.className = 'burst-star';
+            const angle = (i / 24) * 360;
+            const dist = 80 + Math.random() * 100;
+            s.style.left = '50%';
+            s.style.top = '50%';
+            s.style.setProperty('--bx', `${Math.cos(angle * Math.PI / 180) * dist}px`);
+            s.style.setProperty('--by', `${Math.sin(angle * Math.PI / 180) * dist}px`);
+            s.style.animationDelay = `${1.4 + Math.random() * 0.3}s`;
+            s.style.background = ['#fff', '#22d3ee', '#fff', '#6366f1'][i % 4];
+            burst.appendChild(s);
+        }
+
+        setTimeout(() => {
+            introSound.currentTime = 0;
+            introSound.play().catch(() => {
+                const unlock = () => {
+                    introSound.play().catch(() => { });
+                    document.removeEventListener('click', unlock);
+                };
+                document.addEventListener('click', unlock, { once: true });
+            });
+            overlay.classList.add('hidden');
+            setTimeout(() => overlay.remove(), 1100);
+        }, 3200);
+    })();
+
+
+    // ============================================================
+    // 6. TYPEWRITER
+    // ============================================================
     function typeWrite() {
         if (!wordEl) return;
-
         const current = roles[roleIndex];
 
         if (!isDeleting) {
@@ -198,238 +279,143 @@ document.addEventListener('DOMContentLoaded', () => {
                 roleIndex = (roleIndex + 1) % roles.length;
             }
         }
+        setTimeout(typeWrite, isDeleting ? 55 : 95);
+    }
 
-        setTimeout(typeWrite, isDeleting ? 60 : 100);
+    if (typeEl) {
+        typeEl.innerHTML = '<span id="tw-word"></span><span class="typewriter-cursor"></span>';
+        wordEl = document.getElementById('tw-word');
+        typeWrite();
     }
 
 
     // ============================================================
-    // 4. SECTION LOGIC
+    // 7. SKILL MODAL
     // ============================================================
-
-    document.addEventListener('mousemove', (e) => {
-        targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-        targetY = (e.clientY / window.innerHeight - 0.5) * 2;
-    });
-
-
-    // ------ Intro overlay animation ------
-    (function () {
-        const overlay = document.getElementById('intro-overlay');
-        const chars = document.querySelectorAll('.intro-char');
-        const burst = document.getElementById('intro-stars-burst');
-
-        // Letters animate immediately — no waiting
-        chars.forEach((ch, i) => {
-            ch.style.animationDelay = `${0.08 * i + 0.3}s`;
-        });
-
-        // Build burst stars
-        for (let i = 0; i < 20; i++) {
-            const s = document.createElement('div');
-            s.className = 'burst-star';
-
-            const angle = (i / 20) * 360;
-            const dist = 80 + Math.random() * 80;
-
-            s.style.left = '50%';
-            s.style.top = '50%';
-            s.style.setProperty('--bx', `${Math.cos(angle * Math.PI / 180) * dist}px`);
-            s.style.setProperty('--by', `${Math.sin(angle * Math.PI / 180) * dist}px`);
-            s.style.animationDelay = `${1.4 + Math.random() * 0.3}s`;
-            s.style.background = ['#fff', '#fbbf24', '#f97316', '#fde68a'][i % 4];
-
-            burst.appendChild(s);
-        }
-
-        // At 3.2 s the intro starts closing — play sound at that exact moment.
-        // Browsers allow audio triggered by ANY prior interaction on the page
-        // (scrolling, moving mouse, etc.) — the sound fires as the overlay fades.
-        setTimeout(() => {
-            introSound.currentTime = 0;
-            introSound.play().catch(() => {
-                // Fallback: if browser still blocks it, play on next interaction
-                const unlock = () => {
-                    introSound.play().catch(() => { });
-                    document.removeEventListener('click', unlock);
-                    document.removeEventListener('touchstart', unlock);
-                    document.removeEventListener('keydown', unlock);
-                };
-                document.addEventListener('click', unlock, { once: true });
-                document.addEventListener('touchstart', unlock, { once: true, passive: true });
-                document.addEventListener('keydown', unlock, { once: true });
-            });
-
-            overlay.classList.add('hidden');
-            setTimeout(() => overlay.remove(), 1100);
-        }, 3200);
-    })();
-
-
-    // ------ Skills modal — open ------
     skillItems.forEach(item => {
         item.addEventListener('click', () => {
-            const skillKey = item.getAttribute('data-skill');
-            const skillInfo = skillsData[skillKey];
+            const key = item.getAttribute('data-skill');
+            const info = skillsData[key];
+            if (!info) return;
 
-            if (skillInfo) {
-                document.getElementById('modalSkillName').textContent = skillInfo.name;
-                document.getElementById('modalLearnedFrom').textContent = skillInfo.learnedFrom;
+            document.getElementById('modalSkillName').textContent = info.name;
+            document.getElementById('modalLearnedFrom').textContent = info.learnedFrom;
 
-                const certLink = document.getElementById('modalCertLink');
-                const certItem = certLink.closest('.skill-detail-item');
-                if (skillInfo.certLink) {
-                    certLink.textContent = skillInfo.certText;
-                    certLink.href = skillInfo.certLink;
-                    certItem.style.display = 'flex';
-                } else {
-                    certItem.style.display = 'none';
-                }
-
-                const fillEl = document.getElementById('modalSkillLevel');
-                fillEl.style.width = '0%';
-                setTimeout(() => { fillEl.style.width = skillInfo.level + '%'; }, 50);
-
-                skillModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
+            const certLink = document.getElementById('modalCertLink');
+            const certItem = certLink.closest('.skill-detail-item');
+            if (info.certLink) {
+                certLink.textContent = info.certText || 'View Certificate';
+                certLink.href = info.certLink;
+                certItem.style.display = 'flex';
+            } else {
+                certItem.style.display = 'none';
             }
+
+            const fillEl = document.getElementById('modalSkillLevel');
+            fillEl.style.width = '0%';
+            setTimeout(() => { fillEl.style.width = info.level + '%'; }, 50);
+
+            skillModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
         });
     });
 
-
-    // ------ Skills modal — close ------
-    modalClose.addEventListener('click', () => {
-        skillModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === skillModal) {
-            skillModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && skillModal.style.display === 'block') {
-            skillModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
+    function closeModal() { skillModal.style.display = 'none'; document.body.style.overflow = 'auto'; }
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    window.addEventListener('click', e => { if (e.target === skillModal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 
-    // ------ Card tilt effect ------
+    // ============================================================
+    // 8. PROJECT CARD 3D TILT
+    // ============================================================
     document.querySelectorAll('.project-card').forEach(card => {
-
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            const rotateY = ((x - centerX) / centerX) * 8;
-            const rotateX = -((y - centerY) / centerY) * 8;
-
-            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const x = e.clientX - r.left;
+            const y = e.clientY - r.top;
+            const ry = ((x - r.width / 2) / (r.width / 2)) * 7;
+            const rx = -((y - r.height / 2) / (r.height / 2)) * 7;
+            card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px)`;
             card.style.transition = 'transform 0.1s ease';
-            card.style.boxShadow = `0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(251,191,36,0.15)`;
-            card.style.borderColor = 'rgba(251,191,36,0.4)';
+            card.style.boxShadow = '0 20px 60px rgba(34,211,238,0.1), 0 0 40px rgba(34,211,238,0.05)';
+            card.style.borderColor = 'rgba(34,211,238,0.25)';
         });
-
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)';
+            card.style.transform = '';
             card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease';
             card.style.boxShadow = '';
             card.style.borderColor = '';
         });
-
     });
 
 
-    // ------ Beyond Tech story toggle ------
+    // ============================================================
+    // 9. BEYOND TECH STORY TOGGLE
+    // ============================================================
     function toggleMore(id) {
         const more = document.getElementById('more-' + id);
+        if (!more) return;
         const btn = more.previousElementSibling;
         const isOpen = more.classList.contains('open');
-
         more.classList.toggle('open');
-        btn.textContent = isOpen ? 'the story →' : 'close ↑';
+        if (btn) btn.textContent = isOpen ? 'the story →' : 'close ↑';
     }
-
     window.toggleMore = toggleMore;
 
 
-    // ------ Back to top ------
-    btt.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    // ============================================================
+    // 10. BACK TO TOP
+    // ============================================================
+    if (btt) btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 
     // ============================================================
-    // 5. SCROLL EVENT LISTENER
+    // 11. SCROLL EVENTS
     // ============================================================
-
     window.addEventListener('scroll', () => {
         if (header) header.classList.toggle('scrolled', window.scrollY > 50);
         if (btt) btt.classList.toggle('visible', window.scrollY > 400);
-
-        const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-        document.getElementById('scroll-bar').style.width = scrolled + '%';
+        if (scrollBar) {
+            const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            scrollBar.style.width = pct + '%';
+        }
     });
 
 
     // ============================================================
-    // 6. INTERSECTION OBSERVERS
+    // 12. INTERSECTION OBSERVERS
     // ============================================================
 
-    const navObserver = new IntersectionObserver(entries => {
+    // Active nav link
+    const navObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 navLinks.forEach(link => {
-                    link.classList.toggle(
-                        'active',
-                        link.getAttribute('href') === `#${entry.target.id}`
-                    );
+                    link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
                 });
             }
         });
     }, { threshold: 0.45 });
+    sections.forEach(s => navObs.observe(s));
 
-    sections.forEach(s => navObserver.observe(s));
-
-
+    // Fade-up on scroll
     const fadeObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
+                fadeObs.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
 
     sectionEls.forEach(el => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.transform = 'translateY(24px)';
+        el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
         fadeObs.observe(el);
     });
 
 
-    // ============================================================
-    // 7. INITIALIZATION
-    // ============================================================
-
-    generateStars('stars-far', 30);
-    generateStars('stars-mid', 35);
-    generateStars('stars-near', 40);
-    generateEmbers(15);
-
-    parallaxLoop();
-
-    typeEl.innerHTML = '<span id="tw-word"></span><span class="typewriter-cursor"></span>';
-    wordEl = document.getElementById('tw-word');
-    typeWrite();
-
 }); // end DOMContentLoaded
-

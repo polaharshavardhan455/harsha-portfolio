@@ -115,6 +115,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#skills">Skills</a></li>
+                    <li><a href="#experience">Experience</a></li>
                     <li><a href="#credentials">Achievements</a></li>
                     <li><a href="#Education">Education</a></li>
                     <li><a href="#connect">Connect</a></li>
@@ -128,7 +129,7 @@
 
     <!-- ============================================================
          MAIN CONTENT
-         All sections live inside <main>
+         All sections live inside main
          ============================================================ -->
     <main>
 
@@ -367,6 +368,135 @@
                 </div>
             </div>
         </section>
+
+
+    <!-- ── EXPERIENCE ───────────────────────────────────────── -->
+<section id="experience" class="section experience-section">
+    <div class="container">
+        <h2>Experience</h2>
+
+        <div class="exp-list">
+
+            <!-- ── CARD 1 : Current Internship ── -->
+            <div class="exp-card active" data-id="intern">
+
+                <div class="exp-card-header" onclick="toggleExp(this)">
+                    <div class="exp-status-dot active-dot"></div>
+                    <div class="exp-header-text">
+                        <div class="exp-status-label">● Active</div>
+                        <div class="exp-role">Apprenticeship Intern</div>
+                        <div class="exp-meta">Apprehenship Manpower Automation &nbsp;·&nbsp; Jan 2025 → Present &nbsp;·&nbsp; ₹ — /mo</div>
+                    </div>
+                    <div class="exp-chevron">›</div>
+                </div>
+
+                <div class="exp-body">
+
+                    <!-- Tabs -->
+                    <div class="exp-tabs">
+                        <button class="exp-tab on" onclick="switchTab(this,'overview','intern')">Overview</button>
+                        <button class="exp-tab" onclick="switchTab(this,'skills','intern')">Skills</button>
+                        <button class="exp-tab" onclick="switchTab(this,'lessons','intern')">Lessons</button>
+                        <button class="exp-tab" onclick="switchTab(this,'drawbacks','intern')">Drawbacks</button>
+                        <button class="exp-tab" onclick="switchTab(this,'timeline','intern')">Timeline</button>
+                    </div>
+
+                    <!-- Overview -->
+                    <div class="exp-panel active" data-tab="overview" data-card="intern">
+                        <p class="exp-desc">Write your internship description here — what the company does, your role, what you worked on day to day, and the overall scope of your contribution.</p>
+                        <a href="#" class="exp-story-link">Read the full story →</a>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="exp-panel" data-tab="skills" data-card="intern">
+                        <div class="exp-skill-list">
+                            <div class="exp-skill-row">
+                                <span class="exp-skill-name">Skill One</span>
+                                <div class="exp-skill-bar"><div class="exp-skill-fill" style="width:80%"></div></div>
+                            </div>
+                            <div class="exp-skill-row">
+                                <span class="exp-skill-name">Skill Two</span>
+                                <div class="exp-skill-bar"><div class="exp-skill-fill" style="width:65%"></div></div>
+                            </div>
+                            <div class="exp-skill-row">
+                                <span class="exp-skill-name">Skill Three</span>
+                                <div class="exp-skill-bar"><div class="exp-skill-fill" style="width:50%"></div></div>
+                            </div>
+                        </div>
+                        <div class="exp-chips" style="margin-top:1rem;">
+                            <span class="exp-chip">AI</span>
+                            <span class="exp-chip">Automation</span>
+                            <span class="exp-chip">Add more</span>
+                        </div>
+                    </div>
+
+                    <!-- Lessons -->
+                    <div class="exp-panel" data-tab="lessons" data-card="intern">
+                        <ul class="exp-bullets good">
+                            <li>Write the most valuable thing you learned here.</li>
+                            <li>Something about working in a real team or workplace.</li>
+                            <li>A mindset shift or perspective you gained.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Drawbacks -->
+                    <div class="exp-panel" data-tab="drawbacks" data-card="intern">
+                        <ul class="exp-bullets warn">
+                            <li>Something that was harder than expected.</li>
+                            <li>A gap in resources, mentorship, or clarity.</li>
+                            <li>What you'd do differently next time.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="exp-panel" data-tab="timeline" data-card="intern">
+                        <div class="exp-timeline">
+                            <div class="exp-tl-item">
+                                <div class="exp-tl-dot"></div>
+                                <div class="exp-tl-info">
+                                    <div class="exp-tl-date">Jan 2025</div>
+                                    <div class="exp-tl-event">Joined — first day, orientation, setup.</div>
+                                </div>
+                            </div>
+                            <div class="exp-tl-item">
+                                <div class="exp-tl-dot"></div>
+                                <div class="exp-tl-info">
+                                    <div class="exp-tl-date">Feb 2025</div>
+                                    <div class="exp-tl-event">Write your second milestone here.</div>
+                                </div>
+                            </div>
+                            <div class="exp-tl-item">
+                                <div class="exp-tl-dot active"></div>
+                                <div class="exp-tl-info">
+                                    <div class="exp-tl-date">Now</div>
+                                    <div class="exp-tl-event">Currently working on — fill this in.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── CARD 2 : Placeholder for next role ── -->
+            <div class="exp-card dim" data-id="next">
+                <div class="exp-card-header" onclick="toggleExp(this)">
+                    <div class="exp-status-dot dim-dot"></div>
+                    <div class="exp-header-text">
+                        <div class="exp-status-label" style="color:var(--text-muted);">○ Upcoming</div>
+                        <div class="exp-role" style="color:rgba(200,237,245,0.4);">Next Role · TBD</div>
+                        <div class="exp-meta">The next mission is still loading.</div>
+                    </div>
+                    <div class="exp-chevron">›</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    
+
 
 
         <!-- ── EDUCATION ─────────────────────────────────────────── -->

@@ -529,6 +529,30 @@ document.addEventListener('DOMContentLoaded', function () {
         moreEl.classList.toggle('open', !isOpen);
         if (btn) btn.textContent = isOpen ? 'the story →' : 'close ×';
     };
+    
 
 
 }); // end DOMContentLoaded
+// ── Experience: toggle card open/close ──────────────────────
+function toggleExp(header) {
+    const card = header.closest('.exp-card');
+    if (card.classList.contains('dim')) return;
+    card.classList.toggle('open');
+}
+
+// ── Experience: switch tabs ─────────────────────────────────
+function switchTab(btn, tab, cardId) {
+    const card = document.querySelector(`.exp-card[data-id="${cardId}"]`);
+
+    card.querySelectorAll('.exp-tab').forEach(t => t.classList.remove('on'));
+    btn.classList.add('on');
+
+    card.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
+    card.querySelector(`.exp-panel[data-tab="${tab}"]`).classList.add('active');
+}
+
+// ── Auto-open first card on load ────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const first = document.querySelector('.exp-card.active');
+    if (first) first.classList.add('open');
+});

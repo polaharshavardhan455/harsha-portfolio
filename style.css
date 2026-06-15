@@ -69,11 +69,15 @@ body {
 
 /* ============================================================
    3. CURSOR
-   Custom golden arrow cursor
+   Custom crosshair/reticle cursor — hacker targeting style
    ============================================================ */
 
 * {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='22' viewBox='0 0 18 22'%3E%3Cpath d='M2 2 L2 18 L6 14 L9 20 L12 19 L9 13 L15 13 Z' fill='%2322d3ee' stroke='%23040a12' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E") 2 2, auto;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='7' fill='none' stroke='%2322d3ee' stroke-width='1.4'/%3E%3Ccircle cx='12' cy='12' r='1.4' fill='%2322d3ee'/%3E%3Cpath d='M12 1 L12 5 M12 19 L12 23 M1 12 L5 12 M19 12 L23 12' stroke='%2322d3ee' stroke-width='1.4'/%3E%3C/svg%3E") 12 12, auto;
+}
+
+a, button, .skill-item, .project-card, .exp-card-header, .btc-btn, .cred-card {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='none' stroke='%2322d3ee' stroke-width='1.6'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2322d3ee'/%3E%3Cpath d='M12 0 L12 4 M12 20 L12 24 M0 12 L4 12 M20 12 L24 12' stroke='%2322d3ee' stroke-width='1.6'/%3E%3C/svg%3E") 12 12, pointer;
 }
 
 
@@ -139,6 +143,27 @@ body {
     animation: shoot var(--shoot-dur) linear var(--shoot-delay) forwards;
     transform: rotate(-35deg);
     opacity: 0;
+}
+
+/* ── Grid Overlay — faint terminal grid + moving scanline ── */
+.grid-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
+    background-size: 42px 42px;
+}
+
+.scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.05), transparent);
+    animation: scanlineMove 9s linear infinite;
 }
 
 
@@ -376,6 +401,8 @@ h1 {
     -webkit-text-fill-color: transparent;
     margin-bottom: 1.2rem;
     position: relative;
+    opacity: 0;
+    animation: nameGlitch 0.9s steps(1, end) 3.3s forwards;
 }
 
 .hero-name::before {
@@ -1166,28 +1193,49 @@ footer p {
 #intro-content {
     text-align: center;
     position: relative;
+    padding: 0 1.5rem;
 }
+
+/* ── Terminal boot lines ── */
+#intro-terminal {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.75rem, 2.2vw, 1rem);
+    color: #22d3ee;
+    text-align: left;
+    margin: 0 auto 1.5rem;
+    max-width: 480px;
+    min-height: 5.6em;
+}
+
+.terminal-line {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    border-right: 2px solid #22d3ee;
+    margin-bottom: 0.5rem;
+    animation:
+        typeLine 0.6s steps(30, end) forwards,
+        blink 0.6s step-end infinite;
+}
+
+.terminal-line::before {
+    content: attr(data-text);
+}
+
+/* Stagger each line — JS sets animation-delay per line */
 
 #intro-name {
     font-family: 'Major Mono Display', monospace;
-    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-size: clamp(2.2rem, 7vw, 5rem);
     color: #fff;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.05em;
-}
-
-.intro-char {
     opacity: 0;
-    transform: translateY(40px) scale(0.6);
-    display: inline-block;
-    animation: charAppear 0.5s ease forwards;
 }
 
-.intro-space { width: 0.4em; }
+#intro-name.glitching {
+    animation: nameGlitch 0.9s steps(1, end) forwards;
+}
 
 #intro-tagline {
     opacity: 0;
@@ -1196,7 +1244,7 @@ footer p {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     margin-top: 1rem;
-    animation: fadeUp 0.8s ease 1.8s forwards;
+    animation: fadeUp 0.8s ease 2.6s forwards;
 }
 
 #intro-line {
@@ -1204,23 +1252,7 @@ footer p {
     height: 2px;
     background: linear-gradient(90deg, transparent, #22d3ee, transparent);
     margin: 1.2rem auto 0;
-    animation: lineGrow 0.8s ease 1.6s forwards;
-}
-
-#intro-stars-burst {
-    position: absolute;
-    inset: -60px;
-    pointer-events: none;
-}
-
-.burst-star {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: #fff;
-    opacity: 0;
-    animation: burstOut 1s ease forwards;
+    animation: lineGrow 0.8s ease 2.4s forwards;
 }
 
 
@@ -1308,9 +1340,30 @@ footer p {
     to { width: 300px; }
 }
 
+@keyframes typeLine {
+    to { width: 100%; }
+}
+
 @keyframes burstOut {
     0%   { opacity: 1; transform: translate(0, 0) scale(1); }
     100% { opacity: 0; transform: translate(var(--bx), var(--by)) scale(0); }
+}
+
+/* ── Hero name glitch — signature moment on load ── */
+@keyframes nameGlitch {
+    0%   { opacity: 0; text-shadow: 0 0 0 transparent; transform: translate(0, 0); }
+    8%   { opacity: 1; text-shadow: -3px 0 #ff2bd6, 3px 0 #22d3ee; transform: translate(-2px, 1px); }
+    16%  { text-shadow: 3px 0 #ff2bd6, -3px 0 #22d3ee; transform: translate(2px, -1px); }
+    24%  { text-shadow: -2px 0 #ff2bd6, 2px 0 #22d3ee; transform: translate(-1px, 0); clip-path: inset(0 0 40% 0); }
+    32%  { text-shadow: 2px 0 #ff2bd6, -2px 0 #22d3ee; transform: translate(1px, 1px); clip-path: inset(60% 0 0 0); }
+    40%  { text-shadow: none; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+    100% { opacity: 1; text-shadow: none; transform: translate(0, 0); }
+}
+
+/* ── Grid overlay scanline — hacker terminal texture ── */
+@keyframes scanlineMove {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
 }
 
 
@@ -1340,6 +1393,26 @@ footer p {
    ============================================================ */
 
 .experience-section { padding: 6rem 0; }
+
+.exp-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.exp-status-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(34, 211, 238, 0.08);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
 
 .exp-subtitle {
     color: var(--text-muted);

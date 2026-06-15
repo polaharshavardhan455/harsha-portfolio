@@ -120,45 +120,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* ============================================================
        2. INTRO OVERLAY ANIMATION
+       Terminal lines type out in sequence, then the name
+       glitches in, then the whole overlay fades out
        ============================================================ */
 
     (function () {
 
-        const overlay = document.getElementById('intro-overlay');
-        const chars   = document.querySelectorAll('.intro-char');
-        const burst   = document.getElementById('intro-stars-burst');
+        const overlay  = document.getElementById('intro-overlay');
+        const lines    = document.querySelectorAll('.terminal-line');
+        const nameEl   = document.getElementById('intro-name');
 
         if (!overlay) return;
 
-        // Stagger each letter's animation delay
-        chars.forEach(function (char, i) {
-            char.style.animationDelay = (i * 0.08) + 's';
+        // Stagger each terminal line — type, hold cursor, then move to next
+        lines.forEach(function (line, i) {
+            const delay = i * 0.55;
+            line.style.animationDelay = delay + 's, ' + delay + 's';
         });
 
-        // Burst stars that fly outward
-        if (burst) {
-            for (let i = 0; i < 30; i++) {
-                const star  = document.createElement('div');
-                const angle = Math.random() * 360;
-                const dist  = 80 + Math.random() * 120;
-                const bx    = Math.cos(angle * Math.PI / 180) * dist;
-                const by    = Math.sin(angle * Math.PI / 180) * dist;
-
-                star.className = 'burst-star';
-                star.style.cssText = [
-                    'left:'         + (50 + (Math.random() - 0.5) * 20) + '%',
-                    'top:'          + (50 + (Math.random() - 0.5) * 20) + '%',
-                    '--bx:'         + bx + 'px',
-                    '--by:'         + by + 'px',
-                    'animation-delay:' + (1.4 + Math.random() * 0.4) + 's',
-                    'width:'        + (2 + Math.random() * 3) + 'px',
-                    'height:'       + (2 + Math.random() * 3) + 'px',
-                    'background:'   + (Math.random() > 0.5 ? '#fbbf24' : '#fff')
-                ].join(';');
-
-                burst.appendChild(star);
-            }
-        }
+        // Trigger the name glitch once the terminal lines finish
+        const glitchDelay = lines.length * 0.55 + 0.3;
+        setTimeout(function () {
+            if (nameEl) nameEl.classList.add('glitching');
+        }, glitchDelay * 1000);
 
         // Hide overlay after animation completes
         setTimeout(function () {
@@ -418,12 +402,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /* ============================================================
-       7. 3D CARD TILT (Project Cards)
+       7. 3D CARD TILT (Project Cards, Skills, Credentials)
+       Same lightweight tilt-on-hover applied across card types
+       for a consistent "depth" feel throughout the page
        ============================================================ */
 
     (function () {
 
-        const cards = document.querySelectorAll('.project-card');
+        const cards = document.querySelectorAll('.project-card, .skill-item, .cred-card');
 
         cards.forEach(function (card) {
 

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pola Harsha · ECE · Design Verification</title>
+  <!-- no external fonts, libraries or APIs: the whole site works offline -->
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PCB BACKGROUND — board layout + signal pulses (script.js §2) -->
+  <canvas aria-hidden="true" id="bg"></canvas>
+  <!-- SCROLL PROGRESS (VCC bar) -->
+  <div id="vcc"></div>
+  <!-- NAV -->
+  <header>
+    <div class="nav">
+      <a class="logo" href="#top">⚡ P.HARSHA</a>
+      <ul id="menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#dv">Verification</a></li>
+        <li><a href="#chip">3D Chip</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#awards">Achievements</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#beyond">Beyond</a></li>
+        <li><a href="#connect">Connect</a></li>
+      </ul>
+      <button id="mask" title="Switch solder mask colour">MASK: GREEN</button>
+    </div>
+  </header>
+  <main class="wrap" id="top">
+    <!-- HERO -->
+    <div class="hero">
+      <div>
+        <p class="silk">Board: PORTFOLIO-REV1 · 2-layer · ENIG finish</p>
+        <h1>Pola Harsha</h1>
+        <svg aria-hidden="true" class="run" viewBox="0 0 440 16">
+          <path d="M2 8 H180 L196 2 H300 L312 8 H424"></path>
+          <circle cx="432" cy="8" r="6"></circle>
+        </svg>
+        <p class="sub">ECE Student · Design Verification · AI × Robotics</p>
+        <p class="silk"><span class="led"></span>B.Tech Year 3 · JNTUACEP</p>
+        <p class="tw" id="tw"></p>
+        <div class="btns">
+          <a class="btn f" href="#about">Power on ↓</a>
+          <a class="btn" href="#projects">Projects</a>
+        </div>
+      </div>
+      <!-- status register — edit the rows here -->
+      <div class="reg">
+        <i class="pad" style="top:-6px;left:-6px"></i>
+        <i class="pad" style="top:-6px;right:-6px"></i>
+        <i class="pad" style="bottom:-6px;left:-6px"></i>
+        <i class="pad" style="bottom:-6px;right:-6px"></i>
+        <h3>Status register</h3>
+        <div class="hl"><b>CAREER</b><span>Aspiring Design Verification Engineer</span></div>
+        <div><b>READING</b><span>Learning How to Fly — Kalam</span></div>
+        <div><b>GYM</b><span>Phase 2 · Body recomp</span></div>
+        <div><b>NEXT_TRIP</b><span>Planning · TBD</span></div>
+        <div><b>BUILDING</b><span>Next project loading…</span></div>
+      </div>
+    </div>
+    <!-- STATS STRIP -->
+    <div class="stats rv">
+      <div><strong>1</strong><small>Live project</small></div>
+      <div><strong>6</strong><small>Solo trips</small></div>
+      <div><strong>1</strong><small>Internship done</small></div>
+      <div><strong>3yr</strong><small>Into B.Tech</small></div>
+    </div>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- ABOUT -->
+    <section class="rv" id="about">
+      <div class="sh"><span class="ref">U1</span><h2>About</h2><i></i></div>
+      <div class="card">
+        <p>I’m an engineering student building foundations in Electronics, Computer Science, AI and Robotics. Beyond tech I enjoy solo travel, the gym, reading, and connecting with people from different fields. Curious by nature — I explore across disciplines rather than staying in one lane.</p>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- VERIFICATION -->
+    <section class="rv" id="dv">
+      <div class="sh"><span class="ref">TB</span><h2>Verification</h2><i></i></div>
+      <p class="lead">My target role is Design Verification Engineer: proving a chip does what its spec says before it is ever manufactured. Here is a tiny testbench you can run.</p>
+      <!-- testbench block diagram -->
+      <div class="tb" id="tb">
+        <div class="blk"><small>STIMULUS</small>Sequencer</div>
+        <span class="ar">→</span>
+        <div class="blk"><small>PIN-WIGGLE</small>Driver</div>
+        <span class="ar">→</span>
+        <div class="blk"><small>4-BIT ADDER</small>DUT</div>
+        <span class="ar">→</span>
+        <div class="blk"><small>OBSERVE</small>Monitor</div>
+        <span class="ar">→</span>
+        <div class="blk"><small>CHECK</small>Scoreboard</div>
+      </div>
+      <!-- simulation log + controls (script.js §9) -->
+      <div class="dvgrid">
+        <div aria-live="polite" class="term" id="log">
+          <div>// press “Run simulation” to start the testbench</div>
+        </div>
+        <div class="card">
+          <h3>Sim control</h3>
+          <button class="btn f" id="run" style="background:none;cursor:pointer;font-family:inherit">▶ Run simulation</button>
+          <label style="display:block;margin:14px 0;font-size:13px;cursor:pointer">
+            <input id="bug" type="checkbox">
+            Inject a bug into the DUT
+          </label>
+          <p>Functional coverage</p>
+          <div class="meter"><i id="cov"></i></div>
+          <p>Scoreboard: <span id="sb" style="color:var(--ink)">0 pass · 0 fail</span></p>
+          <p>Result: <b id="res" style="color:var(--cu2)">IDLE</b></p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:18px">
+        <!-- mini bug hunt (script.js §10) -->
+        <div class="card">
+          <span class="tag">Mini bug hunt</span>
+          <p style="margin-bottom:10px">Spec: 4-bit counter, synchronous active-high reset to 0, counts up when enable is high. Click the buggy line.</p>
+          <div class="code" id="code">
+            <button data-b="0">always @(posedge clk) begin</button>
+            <button data-b="1"> if (rst) count &lt;= 4'd1;</button>
+            <button data-b="0"> else if (en) count &lt;= count + 1;</button>
+            <button data-b="0">end</button>
+          </div>
+          <p id="bugmsg" style="margin-top:10px;min-height:24px"></p>
+        </div>
+        <!-- verification roadmap — edit the statuses -->
+        <div class="card">
+          <span class="tag d">Roadmap · edit to match you</span>
+          <div class="road">
+            <div class="st">
+              <span>Digital electronics</span>
+              <b class="s1"><i class="led"></i>Foundation</b>
+            </div>
+            <div class="st"><span>Python scripting</span><b class="s1"><i class="led"></i>Foundation</b></div>
+            <div class="st"><span>Verilog HDL</span><b class="s2"><i class="led"></i>Learning</b></div>
+            <div class="st"><span>SystemVerilog</span><b class="s3"><i class="led"></i>Next</b></div>
+            <div class="st"><span>UVM &amp; SVA assertions</span><b class="s3"><i class="led"></i>Next</b></div>
+            <div class="st"><span>Coverage closure</span><b class="s3"><i class="led"></i>Next</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- CHIP ANATOMY (3D) -->
+    <section class="rv" id="chip">
+      <div class="sh"><span class="ref">3D</span><h2>Chip Anatomy</h2><i></i></div>
+      <p class="lead">An exploded view of an IC, the thing I want to verify. Drag the slider to pull the layers apart, then hover or tap a layer.</p>
+      <div class="chipwrap">
+        <div class="stage">
+          <div class="chip" id="chip">
+            <div class="lyr l0" data-i="0" style="--i:0">SILICON</div>
+            <div class="lyr l1" data-i="1" style="--i:1">METAL 1</div>
+            <div class="lyr l2" data-i="2" style="--i:2">METAL 2</div>
+            <div class="lyr l3" data-i="3" style="--i:3">METAL 3</div>
+            <div class="lyr l4" data-i="4" style="--i:4">HARSHA-IC</div>
+          </div>
+        </div>
+        <div class="chipinfo">
+          <label for="explode">Explode</label>
+          <input id="explode" max="100" min="0" type="range" value="45">
+          <div class="lbtns">
+            <button class="lbtn" data-i="0">Silicon</button>
+            <button class="lbtn" data-i="1">Metal 1</button>
+            <button class="lbtn" data-i="2">Metal 2</button>
+            <button class="lbtn" data-i="3">Metal 3</button>
+            <button class="lbtn" data-i="4">Package</button>
+          </div>
+          <p id="chipdesc">Hover or tap a layer to see what it does.</p>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- PROJECTS -->
+    <section class="rv" id="projects">
+      <div class="sh"><span class="ref">J1</span><h2>Projects</h2><i></i></div>
+      <div class="grid">
+        <div class="card">
+          <span class="tag"><span class="led" style="width:6px;height:6px;margin-right:6px"></span>Live</span>
+          <h3>ISS Live Tracker</h3>
+          <p>Real-time International Space Station tracker showing live position, orbital path, and ground pass predictions using public NASA APIs.</p>
+          <a class="more" href="https://polaharshavardhan455.github.io/iss_harsha/" rel="noopener" target="_blank">View project →</a>
+        </div>
+        <div class="card dnp">
+          <span class="tag d">DNP · Not populated</span>
+          <h3>Next Project</h3>
+          <p>Empty footprint. Building something new — this space will fill up.</p>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- SKILLS -->
+    <section class="rv" id="skills">
+      <div class="sh"><span class="ref">IC1–7</span><h2>Skills</h2><i></i></div>
+      <!-- IC chips — one per skill, edit names here -->
+      <div class="chips">
+        <div class="ic"><i class="dot"></i><small>U2 · LANG</small><b>Python</b></div>
+        <div class="ic"><i class="dot"></i><small>U3 · LANG</small><b>C</b></div>
+        <div class="ic"><i class="dot"></i><small>U4 · HW</small><b>Embedded</b></div>
+        <div class="ic"><i class="dot"></i><small>U5 · TOOL</small><b>MATLAB</b></div>
+        <div class="ic"><i class="dot"></i><small>U6 · WEB</small><b>HTML / CSS</b></div>
+        <div class="ic"><i class="dot"></i><small>U7 · WEB</small><b>JavaScript</b></div>
+        <div class="ic"><i class="dot"></i><small>U8 · AI</small><b>Gen AI</b></div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- EXPERIENCE -->
+    <section class="rv" id="experience">
+      <div class="sh"><span class="ref">TRACE</span><h2>Experience</h2><i></i></div>
+      <div class="card" style="margin-bottom:30px">
+        <span class="tag">Completed</span>
+        <h3>Manufacturing &amp; Automation Intern</h3>
+        <p>Indo MIM · May 2025 · 5 weeks · ₹15,000 stipend. First-hand exposure to a real factory floor — production flow, automation systems and CNC machine operations.</p>
+        <div class="pills">
+          <span>Automation</span>
+          <span>CNC Machines</span>
+          <span>Manufacturing</span>
+          <span>Shift Operations</span>
+        </div>
+      </div>
+      <!-- timeline -->
+      <div class="tl">
+        <div class="n">
+          <time>May 6, 2025</time>
+          <p>Joined Indo MIM — started the apprenticeship across rotating shifts.</p>
+        </div>
+        <div class="n">
+          <time>Weeks 1–3</time>
+          <p>Observed CNC machines and automation systems in action.</p>
+        </div>
+        <div class="n">
+          <time>Week 5</time>
+          <p>Concluded early — prioritised a path closer to genuine interest.</p>
+        </div>
+        <div class="n u">
+          <time>Unrouted</time>
+          <p>Next role · TBD. The next chapter is still loading.</p>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- ACHIEVEMENTS -->
+    <section class="rv" id="awards">
+      <div class="sh"><span class="ref">U9–11</span><h2>Achievements</h2><i></i></div>
+      <div class="grid">
+        <div class="card">
+          <span class="tag">Certificate · Coursera / Meta</span>
+          <h3>Python Programming</h3>
+          <p>Meta’s Python course covering core programming, data structures and practical scripting.</p>
+          <a class="more" href="https://coursera.org/share/a0c564366adb9bd2034ce00441eb87f0" rel="noopener" target="_blank">View certificate →</a>
+        </div>
+        <div class="card">
+          <span class="tag">Competition</span>
+          <h3>L’Oréal Brandstorm</h3>
+          <p>Developed a brand strategy pitch against teams nationwide in L’Oréal’s global student innovation competition.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Ideathon · GUVI</span>
+          <h3>AI Impact Summit</h3>
+          <p>Presented an AI-driven idea focused on real-world problem solving.</p>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- EDUCATION -->
+    <section class="rv" id="education">
+      <div class="sh"><span class="ref">STACKUP</span><h2>Education</h2><i></i></div>
+      <div class="stack">
+        <div class="layer">
+          <em>L1 · BASE</em>
+          <div>
+            <h3>School (State Govt)</h3>
+            <p>Until 2021 — maths, science, first time getting curious about how things work.</p>
+          </div>
+        </div>
+        <div class="layer">
+          <em>L2 · INNER</em>
+          <div>
+            <h3>Class 11 &amp; 12 — MPC</h3>
+            <p>2021–2023 — physics and gadgets clicked. Decided engineering was the path.</p>
+          </div>
+        </div>
+        <div class="layer now">
+          <em>L3 · ACTIVE</em>
+          <div>
+            <h3>B.Tech ECE — JNTUACEP</h3>
+            <p>2023–2027 — Python &amp; embedded, AI/ML basics, Robotics &amp; Automation minor.</p>
+          </div>
+        </div>
+        <div class="layer ghost">
+          <em>L4 · TOP</em>
+          <div><h3>Graduation</h3><p>2027 · What’s next — TBD.</p></div>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- BEYOND TECH -->
+    <section class="rv" id="beyond">
+      <div class="sh"><span class="ref">TP1–6</span><h2>Beyond Tech</h2><i></i></div>
+      <div class="grid">
+        <div class="card tp" data-tp="TP1">
+          <h3>Pondicherry</h3>
+          <small>First solo trip · Planned</small>
+          <p>Full plan, real struggles anyway. Where solo travel really started.</p>
+        </div>
+        <div class="card tp" data-tp="TP2">
+          <h3>Mahakumbh Mela</h3>
+          <small>No plan · No stay</small>
+          <p>Went, took the dip, came back. That’s it.</p>
+        </div>
+        <div class="card tp" data-tp="TP3">
+          <h3>New Delhi</h3>
+          <small>Broken trip · Returned early</small>
+          <p>Summer heat, something went sideways. Still counts.</p>
+        </div>
+        <div class="card tp" data-tp="TP4">
+          <h3>Hampi</h3>
+          <small>College friends · Planned by me</small>
+          <p>Historical ruins, good company, one of the better ones.</p>
+        </div>
+        <div class="card tp" data-tp="TP5">
+          <h3>Arunachalam</h3>
+          <small>Solo · Fully unexpected</small>
+          <p>Bought a new shirt and just went. One of the most real trips.</p>
+        </div>
+        <div class="card tp" data-tp="TP6">
+          <h3>New Delhi</h3>
+          <small>AI Impact Summit · Purpose trip</small>
+          <p>Upskill, new people, life lessons packed into a few days.</p>
+        </div>
+      </div>
+    </section>
+    <!-- DIVIDER -->
+    <div aria-hidden="true" class="section-divider">
+      <div class="dot-row"></div>
+    </div>
+    <!-- CONNECT -->
+    <section class="rv" id="connect">
+      <div class="sh"><span class="ref">J2</span><h2>Let’s Connect</h2><i></i></div>
+      <div class="hdr">
+        <a href="mailto:polaharshavardhan455@gmail.com">
+          <i></i>
+          <span><small>PIN 1 · MAIL</small>Email</span>
+        </a>
+        <a href="https://www.linkedin.com/in/harsha-vardhan-pola-7824b429b/" rel="noopener" target="_blank">
+          <i></i>
+          <span><small>PIN 2 · NET</small>LinkedIn</span>
+        </a>
+        <a href="https://github.com/polaharshavardhan455" rel="noopener" target="_blank">
+          <i></i>
+          <span><small>PIN 3 · SRC</small>GitHub</span>
+        </a>
+        <a href="https://x.com/polaharshx__455" rel="noopener" target="_blank">
+          <i></i>
+          <span><small>PIN 4 · SIG</small>X</span>
+        </a>
+      </div>
+    </section>
+  </main>
+  <!-- FOOTER -->
+  <footer>Rev 1.0 · Pola Harsha · Routed by hand, tested with curiosity</footer>
+  <!-- PROBE READOUT (script.js §11) -->
+  <div id="probe">PROBE X 0.0 Y 0.0 mm</div>
+
+  <!-- SCRIPT -->
+  <script src="script.js"></script>
+</body>
+</html>
